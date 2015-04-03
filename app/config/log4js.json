@@ -1,0 +1,25 @@
+{
+    "appenders": [
+            {
+             "type"       : "console"
+            },
+            {
+             "category"   : "pcba",
+             "type"       : "dateFile", 
+             "filename"   : "../logs/pcba", 
+             "maxLogSize" : 10240,
+             "backups"    : 10 ,
+             "pattern"    : "_yyyy_MM.log", 
+             "alwaysIncludePattern":true,
+             "layout": {
+                        "type"    : "pattern",
+                        "pattern" : "[%d] [%5p] %c - %m"
+                       }
+            }
+        ],
+        "levels": {
+            "[all]": "debug",
+            "test": "debug"
+        },
+        "replaceConsole": true
+}
