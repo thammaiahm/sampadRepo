@@ -1,14 +1,3 @@
-require("appdynamics").profile({
-  controllerHostName: 'paid108.saas.appdynamics.com',
-  controllerPort: 443, // If SSL, be sure to enable the next line
-  accountName: 'MotorolaMobility965', // Required for a controller running in multi-tenant mode
-  accountAccessKey: 'rxo6ou0mrvs4', // Required for a controller running in multi-tenant mode
-  applicationName: 'datacollect',
-  tierName: 'talend2Cass DEV',
-  nodeName: 'Node 1 04da-', // Node names must be unique. A unique name has been generated for you.
-  controllerSslEnabled: true // Optional - use if connecting to controller via SSL
-});
-
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');

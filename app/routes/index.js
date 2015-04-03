@@ -4,8 +4,8 @@ var http = require('http');
 var log = require('../config/configs').log4js.getLogger("pcba");
 var cassandra = require('cassandra-driver');
 var cassandraClient = require('../config/configs').cassandraClient;
-var mysqlClient = require('../../config/configs').mysqlConnectionPool;
-var dbQuery = require('../../config/dbQuery');
+var mysqlClient = require('../config/configs').mysqlConnectionPool;
+var dbQuery = require('../config/dbQuery');
 
 // route middleware that will happen on every request
 router.use(function(req, res, next) {
@@ -32,7 +32,6 @@ router.get('/index.html', function(req, res) {
 
 router.post('/api/pcba', function(req, res) {
 
-  log.debug(JSON.stringify(req));
 	var username = req.body.username;
 	var password = req.body.password;
 	if (username != 'pcba' || password != 'pcba') {
@@ -49,7 +48,6 @@ router.post('/api/pcba', function(req, res) {
 
 router.get('/api/pcba', function(req, res) {
 
-	log.debug(JSON.stringify(req));
 	var username = req.query.username;
 	var password = req.query.password;
 	if (username != 'pcba' || password != 'pcba') {
