@@ -17,7 +17,3 @@ exports.mysqlConnectionPool = mysql.createPool({
 var log4js = require("log4js");
 log4js.configure('config/log4js.json', {});
 exports.log4js = log4js;
-		  
-var log4js = require("log4js");
-log4js.configure('config/log4js.json', {});
-exports.log4js = log4js;
