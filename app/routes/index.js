@@ -6,6 +6,8 @@ var cassandra = require('cassandra-driver');
 var cassandraClient = require('../config/configs').cassandraClient;
 var mysqlClient = require('../config/configs').mysqlConnectionPool;
 var dbQuery = require('../config/dbQuery');
+var oracledb = require('oracledb');
+var oracleConfig = require('../config/configs').oracleConfig;
 
 // route middleware that will happen on every request
 router.use(function(req, res, next) {
@@ -95,14 +97,14 @@ router.get('/api/pcba/mysql', function(req, res) {
 		    	if(whereParams[key] && whereParams[key].length>0){
 		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
 		         selectStatement+=key+'=? and ';
-		         params.push(parseValue(key, whereParams[key]));
+		         params.push(whereParams[key]);
 		    	}
 		    }
 		}
 		selectStatement = selectStatement.slice(0, -5);
 		log.debug('whereParams processed');
 	}
-	selectStatement+=' allow filtering;';
+	selectStatement+=';';
 	log.debug('DB query: '+selectStatement);
 	log.debug('Query params: '+params);
 
@@ -118,7 +120,7 @@ router.get('/api/pcba/mysql', function(req, res) {
 		}else{
 			log.info('select successful');
 		  log.debug('DB query result: '+ JSON.stringify(rows));
-			res.status(200).json(stringifyDBValues(rows));
+			res.status(200).json(JSON.stringify(rows));
 		}
 	});
 
@@ -159,7 +161,7 @@ router.get('/api/pcba/cassandra', function(req, res) {
 		    	if(whereParams[key] && whereParams[key].length>0){
 		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
 		         selectStatement+=key+'=? and ';
-		         params.push(parseValue(key, whereParams[key]));
+		         params.push(whereParams[key]);
 		    	}
 		    }
 		}
@@ -181,7 +183,7 @@ router.get('/api/pcba/cassandra', function(req, res) {
 		}else{
 		  log.info('select successful');
 		  log.debug('DB query result: '+ JSON.stringify(result.rows));
-			res.status(200).json(stringifyDBValues(result.rows));
+			res.status(200).json(JSON.stringify(result.rows));
 		}
 	});
 
@@ -203,6 +205,7 @@ router.get('/api/pcba/oracle', function(req, res) {
 		res.status(400).json('{error: "tablename empty"}');
 		return;
 	}
+	//tablename = 'upd.'+tablename;
 
 	var params = [];
 	var selectClause = "*";
@@ -221,15 +224,15 @@ router.get('/api/pcba/oracle', function(req, res) {
 		    if (whereParams.hasOwnProperty(key)) {
 		    	if(whereParams[key] && whereParams[key].length>0){
 		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
-		         selectStatement+=key+'=? and ';
-		         params.push(parseValue(key, whereParams[key]));
+		         selectStatement+=key+'=:val and ';
+		         params.push(whereParams[key]);
 		    	}
 		    }
 		}
 		selectStatement = selectStatement.slice(0, -5);
 		log.debug('whereParams processed');
 	}
-	selectStatement+=' allow filtering;';
+	//selectStatement+=';';
 	log.debug('DB query: '+selectStatement);
 	log.debug('Query params: '+params);
 
@@ -237,16 +240,28 @@ router.get('/api/pcba/oracle', function(req, res) {
   		consistency: cassandra.types.consistencies.quorum,
 		  prepare: true
   };
-	cassandraClient.execute(selectStatement, params, queryOptions, function (err, result) {
-		if(err){
-			log.error('select failed', err);
-			res.status(400).json('{error: "'+err+'"}');
-		}else{
-		  log.info('select successful');
-		  log.debug('DB query result: '+ JSON.stringify(result.rows));
-			res.status(200).json(stringifyDBValues(result.rows));
-		}
-	});
+  
+  oracledb.getConnection(
+  {
+    user          : oracleConfig.user,
+    password      : oracleConfig.password,
+    connectString : oracleConfig.connectString
+  },
+  function(err, connection){
+    if(err){ log.error('Unable to get connection',err); return; }
+    
+    connection.execute(selectStatement, params ,
+      function(err, result){
+        if(err){
+          log.error('select failed', err);
+			    res.status(400).json('{error: "'+err+'"}');
+        }else{
+          log.info('select successful');
+		      log.debug('DB query result: '+ JSON.stringify(result.rows));
+			    res.status(200).json(JSON.stringify(result.rows));
+        }
+      });
+  });
 
 });
 

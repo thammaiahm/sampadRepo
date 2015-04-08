@@ -14,6 +14,13 @@ exports.mysqlConnectionPool = mysql.createPool({
   database          : 'upd'
 });
 
+var oracledb = require('oracledb');
+exports.oracleConfig = {
+    user          : "upd",
+    password      : "updtest",
+    connectString : "va32sdbnupd01.mot.com:1565/stup011"
+};
+
 var log4js = require("log4js");
 log4js.configure('config/log4js.json', {});
 exports.log4js = log4js;
