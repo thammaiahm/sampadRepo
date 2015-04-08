@@ -60,7 +60,194 @@ router.get('/api/pcba', function(req, res) {
 
 });
 
-//test
+router.get('/api/pcba/mysql', function(req, res) {
 
+	var username = req.query.username;
+	var password = req.query.password;
+	if (username != 'pcba' || password != 'pcba') {
+	  log.error('wrong user name or password');
+		res.status(401).json('{error: "wrong user name or password"}');
+		return;
+	}
 	
+	var tablename = req.query.tablename;
+	if(!tablename){
+	  log.error('tablename empty');
+		res.status(400).json('{error: "tablename empty"}');
+		return;
+	}
+
+	var params = [];
+	var selectClause = "*";
+	var selectParams = req.query.select;
+	if(selectParams){
+		selectClause = selectParams;
+	}
+	//constructing prepared statement
+	var selectStatement = 'select '+selectClause+' from '+tablename ;
+	var whereClause = "";
+	var whereParams = req.query.where;
+	if(whereParams){
+		selectStatement+=' where ';
+		log.debug('Processing the whereParams');
+		for (var key in whereParams){
+		    if (whereParams.hasOwnProperty(key)) {
+		    	if(whereParams[key] && whereParams[key].length>0){
+		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
+		         selectStatement+=key+'=? and ';
+		         params.push(parseValue(key, whereParams[key]));
+		    	}
+		    }
+		}
+		selectStatement = selectStatement.slice(0, -5);
+		log.debug('whereParams processed');
+	}
+	selectStatement+=' allow filtering;';
+	log.debug('DB query: '+selectStatement);
+	log.debug('Query params: '+params);
+
+	var queryOptions = {
+  		consistency: cassandra.types.consistencies.quorum,
+		  prepare: true
+  };
+	mysqlClient.query(selectStatement,params, function(err, rows, fields) {
+		if(err){
+		log.error('select failed', err);
+			log.error('select failed', err);
+			res.status(400).json('{error: "'+err+'"}');
+		}else{
+			log.info('select successful');
+		  log.debug('DB query result: '+ JSON.stringify(rows));
+			res.status(200).json(stringifyDBValues(rows));
+		}
+	});
+
+});
+
+router.get('/api/pcba/cassandra', function(req, res) {
+  
+  var username = req.query.username;
+	var password = req.query.password;
+	if (username != 'pcba' || password != 'pcba') {
+	  log.error('wrong user name or password');
+		res.status(401).json('{error: "wrong user name or password"}');
+		return;
+	}
+	
+	var tablename = req.query.tablename;
+	if(!tablename){
+	  log.error('tablename empty');
+		res.status(400).json('{error: "tablename empty"}');
+		return;
+	}
+
+	var params = [];
+	var selectClause = "*";
+	var selectParams = req.query.select;
+	if(selectParams){
+		selectClause = selectParams;
+	}
+	//constructing prepared statement
+	var selectStatement = 'select '+selectClause+' from '+tablename ;
+	var whereClause = "";
+	var whereParams = req.query.where;
+	if(whereParams){
+		selectStatement+=' where ';
+		log.debug('Processing the whereParams');
+		for (var key in whereParams){
+		    if (whereParams.hasOwnProperty(key)) {
+		    	if(whereParams[key] && whereParams[key].length>0){
+		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
+		         selectStatement+=key+'=? and ';
+		         params.push(parseValue(key, whereParams[key]));
+		    	}
+		    }
+		}
+		selectStatement = selectStatement.slice(0, -5);
+		log.debug('whereParams processed');
+	}
+	selectStatement+=' allow filtering;';
+	log.debug('DB query: '+selectStatement);
+	log.debug('Query params: '+params);
+
+	var queryOptions = {
+  		consistency: cassandra.types.consistencies.quorum,
+		  prepare: true
+  };
+	cassandraClient.execute(selectStatement, params, queryOptions, function (err, result) {
+		if(err){
+			log.error('select failed', err);
+			res.status(400).json('{error: "'+err+'"}');
+		}else{
+		  log.info('select successful');
+		  log.debug('DB query result: '+ JSON.stringify(result.rows));
+			res.status(200).json(stringifyDBValues(result.rows));
+		}
+	});
+
+});
+
+router.get('/api/pcba/oracle', function(req, res) {
+
+	var username = req.query.username;
+	var password = req.query.password;
+	if (username != 'pcba' || password != 'pcba') {
+	  log.error('wrong user name or password');
+		res.status(401).json('{error: "wrong user name or password"}');
+		return;
+	}
+	
+	var tablename = req.query.tablename;
+	if(!tablename){
+	  log.error('tablename empty');
+		res.status(400).json('{error: "tablename empty"}');
+		return;
+	}
+
+	var params = [];
+	var selectClause = "*";
+	var selectParams = req.query.select;
+	if(selectParams){
+		selectClause = selectParams;
+	}
+	//constructing prepared statement
+	var selectStatement = 'select '+selectClause+' from '+tablename ;
+	var whereClause = "";
+	var whereParams = req.query.where;
+	if(whereParams){
+		selectStatement+=' where ';
+		log.debug('Processing the whereParams');
+		for (var key in whereParams){
+		    if (whereParams.hasOwnProperty(key)) {
+		    	if(whereParams[key] && whereParams[key].length>0){
+		         log.debug("whereParams: Key is " + key + ", value is " +whereParams[key]);
+		         selectStatement+=key+'=? and ';
+		         params.push(parseValue(key, whereParams[key]));
+		    	}
+		    }
+		}
+		selectStatement = selectStatement.slice(0, -5);
+		log.debug('whereParams processed');
+	}
+	selectStatement+=' allow filtering;';
+	log.debug('DB query: '+selectStatement);
+	log.debug('Query params: '+params);
+
+	var queryOptions = {
+  		consistency: cassandra.types.consistencies.quorum,
+		  prepare: true
+  };
+	cassandraClient.execute(selectStatement, params, queryOptions, function (err, result) {
+		if(err){
+			log.error('select failed', err);
+			res.status(400).json('{error: "'+err+'"}');
+		}else{
+		  log.info('select successful');
+		  log.debug('DB query result: '+ JSON.stringify(result.rows));
+			res.status(200).json(stringifyDBValues(result.rows));
+		}
+	});
+
+});
+
 module.exports = router;

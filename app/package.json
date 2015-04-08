@@ -41,6 +41,7 @@
     "log4js": "^0.6.22",
     "morgan": "^1.5.2",
     "mysql": "^2.6.1",
+    "oracledb": "^0.4.2",
     "request-json": "^0.5.2",
     "serve-favicon": "^2.2.0"
   }
