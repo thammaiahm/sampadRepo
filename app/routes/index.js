@@ -250,15 +250,33 @@ router.get('/api/pcba/oracle', function(req, res) {
   function(err, connection){
     if(err){ log.error('Unable to get connection',err); return; }
     
+    log.info('Connection acquired');
     connection.execute(selectStatement, params ,
       function(err, result){
         if(err){
           log.error('select failed', err);
 			    res.status(400).json('{error: "'+err+'"}');
+			    
+			    connection.release(function(err){
+           if(err){ 
+             log.error('Error releasing connection'+ err); 
+             return;
+           }else{
+             log.info('Connection released');
+           }});
+           
         }else{
           log.info('select successful');
 		      log.debug('DB query result: '+ JSON.stringify(result.rows));
 			    res.status(200).json(JSON.stringify(result.rows));
+			     
+			    connection.release(function(err){
+           if(err){ 
+             log.error('Error releasing connection'+ err); 
+             return;
+           }else{
+             log.info('2.Connection released');
+           }});
         }
       });
   });
