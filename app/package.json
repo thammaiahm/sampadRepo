@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node ./bin/www",
     "env": "env",
-    
     "setup": "npm run update",
     "presetup": "npm run clean",
     "clean:dist": "rm -fr dist/*",
@@ -13,7 +12,6 @@
     "clean": "npm run clean:npm && npm run clean:dist",
     "update:npm": "npm update --save",
     "update": "npm run update:npm",
-    
     "build": "npm run build:dev",
     "build:dev": "npm run clean:dist && npm run dist:dev",
     "dist:dev": "rsync -rav --exclude 'dist' * dist/pcba_dev && cd dist/pcba_dev && npm run config:dev && tar -zcvf ../pcba_dev.tar.gz .",
