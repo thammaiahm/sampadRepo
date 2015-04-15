@@ -8,6 +8,7 @@ var mysqlClient = require('../config/configs').mysqlConnectionPool;
 var dbQuery = require('../config/dbQuery');
 var oracledb = require('oracledb');
 var oracleConfig = require('../config/configs').oracleConfig;
+//var oracleClient = require('../config/configs').oracleConnectionPool;
 
 // route middleware that will happen on every request
 router.use(function(req, res, next) {
@@ -108,11 +109,7 @@ router.get('/api/pcba/mysql', function(req, res) {
 	log.debug('DB query: '+selectStatement);
 	log.debug('Query params: '+params);
 
-	var queryOptions = {
-  		consistency: cassandra.types.consistencies.quorum,
-		  prepare: true
-  };
-	mysqlClient.query(selectStatement,params, function(err, rows, fields) {
+	mysqlClient.query(selectStatement, params, function(err, rows, fields) {
 		if(err){
 		log.error('select failed', err);
 			log.error('select failed', err);
@@ -235,12 +232,7 @@ router.get('/api/pcba/oracle', function(req, res) {
 	//selectStatement+=';';
 	log.debug('DB query: '+selectStatement);
 	log.debug('Query params: '+params);
-
-	var queryOptions = {
-  		consistency: cassandra.types.consistencies.quorum,
-		  prepare: true
-  };
-  
+	
   oracledb.getConnection(
   {
     user          : oracleConfig.user,
@@ -262,7 +254,7 @@ router.get('/api/pcba/oracle', function(req, res) {
              log.error('Error releasing connection'+ err); 
              return;
            }else{
-             log.info('Connection released');
+             log.info('1.Connection released');
            }});
            
         }else{
@@ -280,6 +272,106 @@ router.get('/api/pcba/oracle', function(req, res) {
         }
       });
   });
+  
+  /*
+  var oracleConfig = {
+    user          : "upd",
+    password      : "updtest",
+    connectString : "va32sdbnupd01.mot.com:1565/stup011",
+    poolMin       : 1,
+    poolMax       : 10
+  };
+
+  var oracledb = require('oracledb');
+  oracledb.createPool(oracleConfig, function(err, pool){
+    if(err){ 
+      log.error('Unable to get connection',err); return; 
+    }else{
+      log.info('Oracle Pool acquired');
+      pool.getConnection(function(err, connection){
+      if(err){ log.error('Unable to get connection',err); return; }
+      log.info('Connection acquired');
+      connection.execute(selectStatement, params ,
+        function(err, result){
+          if(err){
+            log.error('select failed', err);
+			      res.status(400).json('{error: "'+err+'"}');
+			    
+			      connection.release(function(err){
+            if(err){ 
+              log.error('Error releasing connection'+ err); 
+              return;
+            }else{
+              log.info('1.Connection released');
+            }});
+          }else{
+            log.info('select successful');
+		        log.debug('DB query result: '+ JSON.stringify(result.rows));
+			      res.status(200).json(JSON.stringify(result.rows));
+			     
+			      connection.release(function(err){
+            if(err){ 
+              log.error('Error releasing connection'+ err); 
+             return;
+            }else{
+              log.info('2.Connection released');
+            }});
+          }
+      });
+    
+  });
+  
+    pool.terminate(function(err){
+      if(err){ 
+        log.error('Unable to terminate pool',err); return; 
+      }else{
+        log.info('Pool terminated');
+      }
+    });
+  
+  }
+    
+  });
+  
+  if(oracleClient){
+    log.debug('oracleClient: '+oracleClient);
+    oracleClient.getConnection(function(err, connection){
+      if(err){ log.error('Unable to get connection',err); return; }
+      log.info('Connection acquired');
+      connection.execute(selectStatement, params ,
+        function(err, result){
+          if(err){
+            log.error('select failed', err);
+			      res.status(400).json('{error: "'+err+'"}');
+			    
+			      connection.release(function(err){
+            if(err){ 
+              log.error('Error releasing connection'+ err); 
+              return;
+            }else{
+              log.info('1.Connection released');
+            }});
+          }else{
+            log.info('select successful');
+		        log.debug('DB query result: '+ JSON.stringify(result.rows));
+			      res.status(200).json(JSON.stringify(result.rows));
+			     
+			      connection.release(function(err){
+            if(err){ 
+              log.error('Error releasing connection'+ err); 
+             return;
+            }else{
+              log.info('2.Connection released');
+            }});
+          }
+      });
+    
+  });
+    
+  }
+  
+  
+  */
 
 });
 
