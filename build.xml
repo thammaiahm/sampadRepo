@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<project name="pcba" default="war">
+    <property file="build.properties"/>
+ 
+    <path id="compile.classpath">
+    	 <fileset dir="${jaxrsLoc}">
+    	 	 <include name="*.jar"/>
+    	 </fileset>	
+        <fileset dir="${libPath}">
+            <include name="*.jar"/>
+        </fileset>
+       
+    </path>
+    <echo>Added all the lib files inside the "${libPath}" directory to the classpath.</echo>
+   
+    <target name="init" depends="clean">
+        <mkdir dir="${warDestination}/build/classes"/>
+        <mkdir dir="${warDestination}/dist" />
+        <echo>Created folders to store class files ${warDestination}. </echo>
+    </target>
+   
+    <target name="compile" depends="init" >
+        <javac includeantruntime="false" destdir="${warDestination}/build/classes" debug="${debug}" srcdir="${javaResouceFolder}">
+            <classpath refid="compile.classpath"/>
+        </javac>
+        <echo>Compiled using javac task and placed files to directories created in the beginning.</echo>
+    </target>
+   
+    <target name="war" depends="compile">
+        <war destfile="${warDestination}/${warFileName}" webxml="${webxmlPath}">
+            <fileset dir="${parentWebPath}"/>
+            <lib dir="${libPath}"/>
+            <classes dir="${warDestination}/build/classes"/>
+        </war>
+        <echo>You are done with creating war, location:${warDestination}/${warFileName}.</echo>
+        <delete dir="${warDestination}/build" />
+        <delete dir="${warDestination}/dist" />
+    </target>
+   
+    <target name="clean">
+       
+        <delete includeemptydirs="true">
+            <fileset dir="${warDestination}" includes="**/*" defaultexcludes="false"/>
+          </delete>
+        <echo> Cleaned everything under ${warDestination}. </echo>
+    </target>
+   
+   
+</project>
