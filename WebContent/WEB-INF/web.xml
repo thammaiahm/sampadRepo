@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>pcbaService</display-name>
+  <display-name>pcba</display-name>
+  <servlet>
+    <servlet-name>R12SnSwapUpdateRestWebservice</servlet-name>
+    <servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>UPDDispatchSerialRestWebservice</servlet-name>
+    <servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+  </servlet>
+   <servlet>
+    <servlet-name>UPDSerialSuccessFailureRestWebservice</servlet-name>
+    <servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UPDSWAPUpdateRestWebservice</servlet-name>
+    <servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+  </servlet>
   <servlet-mapping>
-    <servlet-name>pcbaServlet</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <servlet-name>R12SnSwapUpdateRestWebservice</servlet-name>
+    <url-pattern>/r12SnSwapUpdateService/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UPDDispatchSerialRestWebservice</servlet-name>
+    <url-pattern>/dispatchNewSnService/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UPDSerialSuccessFailureRestWebservice</servlet-name>
+    <url-pattern>/serialSuccessFailureService/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UPDSWAPUpdateRestWebservice</servlet-name>
+    <url-pattern>/serialSwapUpdateService/*</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>resteasy.scan</param-name>
@@ -11,18 +47,23 @@
   </context-param>
   <context-param>
     <param-name>resteasy.servlet.mapping.prefix</param-name>
-    <param-value></param-value>
+    <param-value>/r12SnSwapUpdateService</param-value>
+  </context-param>
+  <context-param>
+    <param-name>resteasy.servlet.mapping.prefix</param-name>
+    <param-value>/dispatchNewSnService</param-value>
+  </context-param>
+  <context-param>
+    <param-name>resteasy.servlet.mapping.prefix</param-name>
+    <param-value>/serialSuccessFailureService</param-value>
+  </context-param>
+   <context-param>
+    <param-name>resteasy.servlet.mapping.prefix</param-name>
+    <param-value>/serialSwapUpdateService</param-value>
   </context-param>
   <listener>
     <listener-class>
 			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 			</listener-class>
   </listener>
-  <servlet>
-    <servlet-name>pcbaServlet</servlet-name>
-    <servlet-class>
-			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
-		</servlet-class>
-  </servlet>
- 
 </web-app>
