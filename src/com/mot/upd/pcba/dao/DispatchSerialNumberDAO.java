@@ -28,7 +28,7 @@ public class DispatchSerialNumberDAO {
 
 		try {
 
-			ds = DBUtil.getDataSource();
+			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG);

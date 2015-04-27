@@ -34,7 +34,7 @@ public class UPDSerialSuccessFailureDAO {
 
 		try {
 
-			ds = DBUtil.getDataSource();
+			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
 			logger.info("Data source not found in IMEI:"+e);
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
@@ -64,7 +64,7 @@ public class UPDSerialSuccessFailureDAO {
 	public PCBAProgramResponse updateMEIDStatus(){
 		try {
 
-			ds = DBUtil.getDataSource();
+			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
 			logger.info("Data source not found in MEID:"+e);
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);

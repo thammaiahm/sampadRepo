@@ -13,6 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -23,19 +24,62 @@ public class DBUtil {
 
 	private static Logger logger = Logger.getLogger(DBUtil.class);
 
-	public static DataSource getDataSource() throws NamingException
+	public static DataSource getOracleDataSource() throws NamingException
 	{
 		logger.info("DBUtil Inside  DataSource method inside");
 		DataSource ds = null;
 		try {
 			Context ctx = new InitialContext();
-			ds = (DataSource) ctx.lookup("java:jboss/updOracle");
+			ds = (DataSource) ctx.lookup("java:jboss/jdbc/updOracleJNDI");
 		} catch (NamingException e) {
 			throw e;
 		}
 		logger.info("DataSource method end");
 
 		return ds;
+	}
+	public static DataSource getMySqlDataSource() throws NamingException
+	{
+		logger.info("DBUtil Inside  DataSource method inside");
+		DataSource ds = null;
+		try {
+			Context ctx = new InitialContext();
+			ds = (DataSource) ctx.lookup("java:jboss/jdbc/updMySqlJNDI");
+		} catch (NamingException e) {
+			throw e;
+		}
+		logger.info("DataSource method end");
+
+		return ds;
+	}
+	public static String dbConfigCheck(){
+		
+		DataSource ds;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String updConfig = null;
+		String query = "select value from upd_config where key = 'CONFIG_OLD'";
+		try{
+			
+				ds = DBUtil.getOracleDataSource();
+				conn  = ds.getConnection();
+				System.out.println("connection " + conn);
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(query);
+				while(rs.next()){
+					updConfig = rs.getString(1);
+	
+					}
+
+			}catch(Exception e){
+				logger.error(e.getMessage());
+				//e.printStackTrace();
+			}finally{
+				
+					DBUtil.closeConnections(conn, stmt, rs);
+			}
+		return updConfig;
 	}
 	public static Connection getConnection(DataSource ds) throws SQLException
 	{

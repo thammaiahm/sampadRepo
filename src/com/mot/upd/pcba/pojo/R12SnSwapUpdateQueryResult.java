@@ -17,7 +17,7 @@ public class R12SnSwapUpdateQueryResult implements Serializable{
 	@XmlElement(name = "serialOut", nillable=true,required=true,namespace="java:com.mot.upd.pcba.pojo")
 	private String serialOut;
 	@XmlElement(name = "responseCode", nillable=true,required=true,namespace="java:com.mot.upd.pcba.pojo")
-	private String responseCode;
+	private int responseCode;
 	@XmlElement(name = "responseMsg", nillable=true,required=true,namespace="java:com.mot.upd.pcba.pojo")
 	private String responseMsg;
 	
@@ -33,10 +33,10 @@ public class R12SnSwapUpdateQueryResult implements Serializable{
 	public void setSerialOut(String serialOut) {
 		this.serialOut = serialOut;
 	}
-	public String getResponseCode() {
+	public int getResponseCode() {
 		return responseCode;
 	}
-	public void setResponseCode(String responseCode) {
+	public void setResponseCode(int responseCode) {
 		this.responseCode = responseCode;
 	}
 	public String getResponseMsg() {
