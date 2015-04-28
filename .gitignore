@@ -3,10 +3,10 @@ app/dist/*
 
 *.log
 .DS_Store
-.settings
+
 .settings/*
 .jshintrc
-.project
+
 .tern-project
 
 logs/*
