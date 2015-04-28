@@ -97,7 +97,18 @@ public String getNewSerialNo() {
 		this.rsdID = rsdID;
 	}
 
-
+	public void reset() {
+		newSerialNo = null;
+		buildType = null;
+		customer = null;
+		dispatchedDate = null;
+		mascID = null;
+		gppdID = null;
+		requestType = null;
+		responseCode = 0;
+		responseMsg = null;
+		rsdID = null;
+	}
 
 	
 
