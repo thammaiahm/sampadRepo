@@ -47,7 +47,7 @@ public R12SnSwapUpdateQueryResult r12SnSwapUpdateService(@PathParam("serialIn") 
 				r12UpdateQueryResult.setSerialOut(pCBASerialNumberModel.getNewSN());
 				r12UpdateQueryResult.setResponseCode(ServiceMessageCodes.SUCCESS);
 				r12UpdateQueryResult.setResponseMsg(ServiceMessageCodes.OPERATION_SUCCESS);
-				
+   
 				}else{
 				r12UpdateQueryResult.setSerialIn(r12UpdateQueryInput.getSerialNO());
 				r12UpdateQueryResult.setSerialOut(pCBASerialNumberModel.getNewSN());
