@@ -27,6 +27,7 @@ public class ServiceMessageCodes {
 	public static final int NEW_SERIAL_NO_AVAILABLE = 5007;
 	public static final int NEW_ULMA_AVAILABLE = 5008;
 	public static final int INVALID_SN_TYPE = 5015;
+	public static final int NO_PROTOCOL_FOUND = 5016;
 
 	// Viswanath added
 
@@ -50,6 +51,7 @@ public class ServiceMessageCodes {
 	public static final String NEW_ULMA_AVAILABLE_MSG = "New ULMA Available For Dispatch";
 	public static final String SERIAL_NO_AVAILABLE_FOR_DISPATCH_MSG = "New Serial number available for Dispatch";
 	public static final String INVALID_SN_TYPE_MSG = "Serial number type should be either MEID or IMEI";
+	public static final String NO_PROTOCOL_FOUND_MSG = "Protocol Name is mandatory for MEID";
 
 	// Viswanath added
 
