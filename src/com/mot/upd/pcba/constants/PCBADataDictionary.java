@@ -12,6 +12,7 @@ public class PCBADataDictionary {
 	public static final String BUILD_TYPE2="PROTO";
 	public static final String DISPATCHED="Y";
 	public static final String UNDISPATCHED="N";
+	public static final String MODIFIED_BY="pcba_reqest_ws";
 	
 
 }
