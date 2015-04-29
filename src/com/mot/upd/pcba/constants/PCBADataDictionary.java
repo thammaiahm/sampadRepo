@@ -20,6 +20,7 @@ public class PCBADataDictionary {
 	public static final String DBCONFIG = "NO";
 	public static final String STATUS_S="S";
 	public static final String STAYUS_F="F";
+	public static final String DEFAULT_CUSTOMER="ANY";
 	
 
 }
