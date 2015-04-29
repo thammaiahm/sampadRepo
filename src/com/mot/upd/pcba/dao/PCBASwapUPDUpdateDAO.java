@@ -211,8 +211,7 @@ public class PCBASwapUPDUpdateDAO {
 				response.setResponseMessage(ServiceMessageCodes.READING_OLD_SERIAL_NO_INTO_NEW_SERIAL_NO);
 				
 			}else{
-				conn = DBUtil.getConnection(ds);
-				
+				conn = DBUtil.getConnection(ds);				
 				StringBuffer stb=new StringBuffer();
 				stb.append("insert into shipment_notavail_sn(SERIAL_NO_IN,SERIAL_NO_OUT,CREATED_BY,CREATION_DATETIME,LAST_MOD_BY,LAST_MOD_DATETIME,STATUS) values(?,?,?,?,?,?,?)");
 				prestmt=conn.prepareStatement(stb.toString());

@@ -63,7 +63,7 @@ public class UPDSerialSuccessFailureOracleDAO implements UPDSerialSuccessFailure
 			conn=DBUtil.getConnection(ds);
 			pstmt = con.prepareStatement(SQLQueryIMEI);
 			pstmt.execute();
-			logger.info("IMEIStatusSuccess-SQLQueryIMEI:"+SQLQueryIMEI);
+			logger.info("IMEIStatusSuccess-SQLQueryIMEI: "+SQLQueryIMEI);
 			
 			String SQLQueryMEID ="update upd_pcba_pgm_meid  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			connection=DBUtil.getConnection(ds);

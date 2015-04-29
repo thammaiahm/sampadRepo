@@ -164,7 +164,7 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 			connection=DBUtil.getConnection(ds);
 			prestmt = con.prepareStatement(MYSQL_QueryMEID);
 			pstmt.execute();
-			logger.info("MEIDStatusSuccess-MY SQLQueryMEID:"+MYSQL_QueryMEID);
+			logger.info("MEIDStatusSuccess - MY SQLQueryMEID:"+MYSQL_QueryMEID);
 
 			response.setSerialNO(pcbaProgramQueryInput.getSerialNO());
 			response.setResponseCode(ServiceMessageCodes.SUCCESS);

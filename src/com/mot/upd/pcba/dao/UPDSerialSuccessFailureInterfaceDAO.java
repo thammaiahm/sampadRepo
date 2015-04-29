@@ -11,6 +11,7 @@ import com.mot.upd.pcba.pojo.PCBAProgramResponse;
  *
  */
 public interface UPDSerialSuccessFailureInterfaceDAO {
+	
 
 	PCBAProgramResponse updateIMEIStatusSuccess(
 			PCBAProgramQueryInput pcbaProgramQueryInput);
