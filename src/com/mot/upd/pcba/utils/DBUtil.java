@@ -73,8 +73,7 @@ public class DBUtil {
 					}
 
 			}catch(Exception e){
-				logger.error(e.getMessage());
-				//e.printStackTrace();
+				 e.printStackTrace();
 			}finally{
 				
 					DBUtil.closeConnections(conn, stmt, rs);
