@@ -8,12 +8,12 @@ public class ServiceMessageCodes {
 
 	// Thammaiah added
 	// Common codes(Application Exception)
-	public static final int NO_DATASOURCE_FOUND = 6000;
-	public static final int SQL_EXCEPTION = 6001;
+	public static final int NO_DATASOURCE_FOUND = 8001;
+	public static final int SQL_EXCEPTION = 8001;
 
 	// Common Messages
-	public static final String NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG = "Dispatch Serial WS: Can't get data source!";
-	public static final String SQL_EXCEPTION_MSG = "Some Internal Exception";
+	public static final String NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG = "Error:Please Contact Support Team    Error Details:";
+	public static final String SQL_EXCEPTION_MSG = "Error:Please Contact Support Team    Error Details:";
 	// Thammaiah added
 	// Codes for dispatch serial no
 
@@ -41,7 +41,7 @@ public class ServiceMessageCodes {
 	
 	// Thammaiah added
 	// Messages for dispatch serial no WS
-	public static final String OPERATION_SUCCESS = "Operation Success";
+	public static final String OPERATION_SUCCESS = "Successfully dispatched serial number";
 	public static final String NO_SERIAL_NO_AVAILABLE_FOR_DISPATCH_MSG = "No New Serial number available for Dispatch";
 	public static final String INVALID_REQUEST_TYPE_MSG = "Request type Value must be V or D";
 	public static final String INVALID_BUILD_TYPE_MSG = "Build type Value must be PROD";
