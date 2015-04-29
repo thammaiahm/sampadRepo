@@ -28,6 +28,8 @@ public class ServiceMessageCodes {
 	public static final int NEW_ULMA_AVAILABLE = 5008;
 	public static final int INVALID_SN_TYPE = 5015;
 	public static final int NO_PROTOCOL_FOUND = 5016;
+	public static final int ULMA_ADDRESS_GREATER_THAN_FIVE = 5017;
+	public static final int INVALID_GPPID = 5018;
 
 	// Viswanath added
 
@@ -54,6 +56,8 @@ public class ServiceMessageCodes {
 	public static final String SERIAL_NO_AVAILABLE_FOR_DISPATCH_MSG = "New Serial number available for Dispatch";
 	public static final String INVALID_SN_TYPE_MSG = "Serial number type should be either MEID or IMEI";
 	public static final String NO_PROTOCOL_FOUND_MSG = "Protocol Name is mandatory for MEID";
+	public static final String ULMA_ADDRESS_GREATER_THAN_FIVE_MSG = "Ulma address requested is greater than five";
+	public static final String INVALID_GPPID_MSG = "Invalid GPPID";
 
 	// Viswanath added
 
