@@ -9,8 +9,10 @@ import javax.ws.rs.core.Response;
 import com.mot.upd.pcba.constants.PCBADataDictionary;
 import com.mot.upd.pcba.constants.ServiceMessageCodes;
 import com.mot.upd.pcba.dao.DispatchSerialNumberDAO;
+import com.mot.upd.pcba.dao.DispatchSerialNumberOracleDAO;
 import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
+import com.mot.upd.pcba.utils.DBUtil;
 
 /**
  * @author Quinnox Dev Team
@@ -74,11 +76,24 @@ public class UPDDispatchSerialRestWebservice {
 			return Response.status(200).entity(dispatchSerialResponsePOJO)
 					.build();
 		}
+		
+		
+		
 
-		/*
-		 * FOR ORACLE:if request type is IMEI check for protocol and query
-		 */
-		DispatchSerialNumberDAO dispatchSerialNumberDAO = new DispatchSerialNumberDAO();
+		DispatchSerialNumberDAO dispatchSerialNumberDAO=null;
+		String updConfig = DBUtil.dbConfigCheck();
+		
+		//Oracle
+		if(updConfig.equals("YES"))
+		{
+			 dispatchSerialNumberDAO = new DispatchSerialNumberOracleDAO();
+		}
+		//MySQL
+		else
+		{
+			 dispatchSerialNumberDAO = new DispatchSerialNumberOracleDAO();
+		}
+		;
 
 		// If IMEI
 		if (dispatchSerialRequestPOJO.getSnRequestType().trim()
@@ -89,17 +104,18 @@ public class UPDDispatchSerialRestWebservice {
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.dispatchSerialNumberIMEI(dispatchSerialRequestPOJO);
 				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND
-						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION) {
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
 					return Response.status(200)
 							.entity(dispatchSerialResponsePOJO).build();
 				}
 				// If ULMA address not available return response
-				/*
-				 * dispatchSerialResponsePOJO = dispatchSerialNumberDAO
-				 * .getULMAAddress(dispatchSerialRequestPOJO,
-				 * dispatchSerialResponsePOJO);
-				 */
-
+				dispatchSerialResponsePOJO =dispatchSerialNumberDAO.dispatchULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
+				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_ULMA_AVAILABLE
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
+					return Response.status(200)
+							.entity(dispatchSerialResponsePOJO).build();
+				}
+				
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.updateDispatchStatusIMEI(dispatchSerialRequestPOJO,
 								dispatchSerialResponsePOJO);
@@ -110,15 +126,11 @@ public class UPDDispatchSerialRestWebservice {
 					.equals(PCBADataDictionary.REQUEST_VALIDATE)) {
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.validateSerialNumberIMEI(dispatchSerialRequestPOJO);
+				dispatchSerialResponsePOJO = dispatchSerialNumberDAO.validateULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
 			}
 		}
-		/*
-		 * End Checking for IMEI
-		 */
-
-		/*
-		 * FOR ORACLE:MEID
-		 */
+		
+		// * End Checking for IMEI
 		if (dispatchSerialRequestPOJO.getSnRequestType().trim()
 				.equals(PCBADataDictionary.MEID)) {
 
@@ -144,6 +156,14 @@ public class UPDDispatchSerialRestWebservice {
 					return Response.status(200)
 							.entity(dispatchSerialResponsePOJO).build();
 				}
+				// If ULMA address not available return response
+				dispatchSerialResponsePOJO =dispatchSerialNumberDAO.dispatchULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
+				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_ULMA_AVAILABLE
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
+					return Response.status(200)
+							.entity(dispatchSerialResponsePOJO).build();
+				}
+				
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.updateDispatchStatusMEID(dispatchSerialRequestPOJO,
 								dispatchSerialResponsePOJO);
@@ -154,15 +174,23 @@ public class UPDDispatchSerialRestWebservice {
 					.equals(PCBADataDictionary.REQUEST_VALIDATE)) {
 
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
-						.validateSerialNumberIMEI(dispatchSerialRequestPOJO);
+						.validateSerialNumberMEID(dispatchSerialRequestPOJO);
 			}
 		}
-		/*
-		 * End Checking for MEID
-		 */
+		
+		// End Checking for MEID
+		 
+		
+	
+		
+		
+	
+		
 
 		return Response.status(201).entity(dispatchSerialResponsePOJO).build();
 	}
+
+	
 
 	private boolean validateBuildType(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
