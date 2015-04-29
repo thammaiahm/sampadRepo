@@ -136,4 +136,22 @@ public class DBUtil {
 			e.printStackTrace();
 		}
 	}
+	public static void connectionClosed(Connection con,PreparedStatement preparedStmt){
+		logger.info("DBUtil Inside  closeConnection method inside.");
+		
+		try {
+			if (preparedStmt != null) {
+				preparedStmt.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if (con != null) {
+				con.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

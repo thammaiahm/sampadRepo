@@ -31,13 +31,15 @@ public class ServiceMessageCodes {
 
 	// Viswanath added
 
-	public static final int MEID_SUCCESS = 5009;
+	//public static final int MEID_SUCCESS = 5009;
 	public static final int MEID_FAILURE = 5010;
 	public static final int INVALID_STATUS = 5011;
 	public static final int NO_LOCK_CODE_FOUND = 5012;
 	public static final int OLD_SERIAL_NO_NOT_FOUND = 5013;
 	public static final int NEW_SERIAL_NO_NOT_FOUND = 5014;
-
+	//public static final int IMEI_SUCCESS = 5016;
+	public static final int IMEI_FAILURE = 5017;
+	public static final int OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE = 5018;
 	
 	// Thammaiah added
 	// Messages for dispatch serial no WS
@@ -62,5 +64,11 @@ public class ServiceMessageCodes {
 	public static final String OLD_SERIAL_NO_NOT_FOUND_MSG = "Old Serial Not Found";
 	public static final String NEW_SERIAL_NO_NOT_FOUND_MSG = "New Serial Not Found";
 	public static final String NO_DATASOURCE_FOUND_FOR_SERIAL_NO_MSG ="No DataSource found for SerialNO.";
+	public static final String IMEI_SUCCES_MSG = "IMEI Success";
+	public static final String IMEI_FAILURE_MSG = "IMEI Failure";
+	public static final String PCBA_INPUT_PARAM_MISSING_MSG = "Following Fields are mandatory- Serial Number,rsdID,mascID,status,msl,otksl,servicePassCode,snType.Please re-enter and try again.";
+	public static final String PCBA_INPUT_PARAM_MISSING = "Following Fields are mandatory- ClientIP,mascID,serialNoIn,serialNoOut,serialNoType,repairdate.Please re-enter and try again.";
+	public static final String OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE_MSG ="Old Serialno not found in Shipment table";
+	public static final String READING_OLD_SERIAL_NO_INTO_NEW_SERIAL_NO ="Reading old serial number data and Inserted into new Serial Number in Shipment table";
 
 }
