@@ -59,8 +59,8 @@ public class ServiceMessageCodes {
 	public static final String MEID_FAILURE_MSG = "MEID Failure";
 	public static final String INVALID_STATUS_MSG = "Invalid Status";
 	public static final String NO_LOCK_CODE_DETAILS_FOUND_MSG = "No Lock Code Details Found";
-	public static final String OLD_SERIAL_NO_NOT_FOUND_MSG = "Old Serial No Not Found";
-	public static final String NEW_SERIAL_NO_NOT_FOUND_MSG = "New Serial No Found";
+	public static final String OLD_SERIAL_NO_NOT_FOUND_MSG = "Old Serial Not Found";
+	public static final String NEW_SERIAL_NO_NOT_FOUND_MSG = "New Serial Not Found";
 	public static final String NO_DATASOURCE_FOUND_FOR_SERIAL_NO_MSG ="No DataSource found for SerialNO.";
 
 }
