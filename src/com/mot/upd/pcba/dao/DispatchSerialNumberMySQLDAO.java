@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -173,6 +175,35 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			dispatchSerialResponsePOJO.setRequestType(dispatchSerialRequestPOJO
 					.getRequestType());
 			// End setting remaining response parameter
+			
+			//Update ULMA
+			
+			// Updating ULMA Address
+						List<String> ulmaAddress = dispatchSerialResponsePOJO
+								.getUlmaAddress();
+						String ulmaAddressString = null;
+						for (String address : ulmaAddress) {
+
+							if (ulmaAddressString == null) {
+								ulmaAddressString = "'" + address + "'";
+							} else {
+								ulmaAddressString = ulmaAddressString + "," + "'" + address
+										+ "'";
+							}
+
+						}
+
+						// update ULMA table
+						preparedStmt = null;
+						String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("+ulmaAddressString+");";
+						preparedStmt = con.prepareStatement(updateDispatchStatusForULMA);
+						preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
+						preparedStmt.setString(2, PCBADataDictionary.DISPATCHED);
+						preparedStmt.setString(3, dispatchSerialResponsePOJO
+								.getNewSerialNo().trim());
+						
+						int rows = preparedStmt.executeUpdate();
+				// update ULMA table
 
 			con.commit();
 		} catch (SQLException e) {
@@ -403,6 +434,33 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			dispatchSerialResponsePOJO.setResponseMsg(ServiceMessageCodes.OPERATION_SUCCESS);
 			dispatchSerialResponsePOJO.setRequestType(dispatchSerialRequestPOJO.getRequestType());
 			//End setting remaining response parameter
+			
+			// Updating ULMA Address
+			List<String> ulmaAddress = dispatchSerialResponsePOJO
+					.getUlmaAddress();
+			String ulmaAddressString = null;
+			for (String address : ulmaAddress) {
+
+				if (ulmaAddressString == null) {
+					ulmaAddressString = "'" + address + "'";
+				} else {
+					ulmaAddressString = ulmaAddressString + "," + "'" + address
+							+ "'";
+				}
+
+			}
+
+			// update ULMA table
+			preparedStmt = null;
+			String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("+ulmaAddressString+");";
+			preparedStmt = con.prepareStatement(updateDispatchStatusForULMA);
+			preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
+			preparedStmt.setString(2, PCBADataDictionary.DISPATCHED);
+			preparedStmt.setString(3, dispatchSerialResponsePOJO
+					.getNewSerialNo().trim());
+			
+			int rows = preparedStmt.executeUpdate();
+	// update ULMA table
 
 			con.commit();
 		} catch (SQLException e) {
@@ -499,16 +557,122 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	public DispatchSerialResponsePOJO dispatchULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		List<String> ulmaAddress = new ArrayList<String>();
 		// TODO Auto-generated method stub
-		return null;
+		try {
+
+			ds = DBUtil.getMySqlDataSource();
+		} catch (NamingException e) {
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
+							+ e.getMessage());
+			return dispatchSerialResponsePOJO;
+		}
+		try {
+			// get database connection
+			con = DBUtil.getConnection(ds);
+
+			String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+
+			preparedStmt = con.prepareStatement(selectSerialNumber);
+			preparedStmt.setString(1, PCBADataDictionary.UNDISPATCHED);
+			preparedStmt.setInt(2, dispatchSerialRequestPOJO.getNumberOfUlma());
+			rs = preparedStmt.executeQuery();
+			if (rs.next()) {
+				do {
+
+					ulmaAddress.add(rs.getString("ulma"));
+
+				} while (rs.next());
+				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
+			} else {
+				dispatchSerialResponsePOJO.reset();
+				dispatchSerialResponsePOJO
+						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
+				dispatchSerialResponsePOJO
+						.setResponseMsg(ServiceMessageCodes.NO_ULMA_AVAILABLE_MSG);
+
+				return dispatchSerialResponsePOJO;
+			}
+
+		} catch (SQLException e) {
+			dispatchSerialResponsePOJO.reset();
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+							+ e.getMessage());
+
+		} finally {
+
+			DBUtil.closeConnections(con, preparedStmt, rs);
+
+		}
+
+		return dispatchSerialResponsePOJO;
 	}
 
 	@Override
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		List<String> ulmaAddress = new ArrayList<String>();
 		// TODO Auto-generated method stub
-		return null;
+		try {
+
+			ds = DBUtil.getMySqlDataSource();
+		} catch (NamingException e) {
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
+							+ e.getMessage());
+			return dispatchSerialResponsePOJO;
+		}
+		try {
+			// get database connection
+			con = DBUtil.getConnection(ds);
+
+			String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+
+			preparedStmt = con.prepareStatement(selectSerialNumber);
+			preparedStmt.setString(1, PCBADataDictionary.UNDISPATCHED);
+			preparedStmt.setInt(2, dispatchSerialRequestPOJO.getNumberOfUlma());
+			rs = preparedStmt.executeQuery();
+			if (rs.next()) {
+				do {
+
+				      //Nothing
+
+				} while (rs.next());
+				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
+			} else {
+				dispatchSerialResponsePOJO.reset();
+				dispatchSerialResponsePOJO
+						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
+				dispatchSerialResponsePOJO
+						.setResponseMsg(ServiceMessageCodes.NO_ULMA_AVAILABLE_MSG);
+
+				return dispatchSerialResponsePOJO;
+			}
+
+		} catch (SQLException e) {
+			dispatchSerialResponsePOJO.reset();
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+							+ e.getMessage());
+
+		} finally {
+
+			DBUtil.closeConnections(con, preparedStmt, rs);
+
+		}
+
+		return dispatchSerialResponsePOJO;
 	}
 
 	
