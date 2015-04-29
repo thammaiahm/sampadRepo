@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import com.mot.upd.pcba.constants.PCBADataDictionary;
 import com.mot.upd.pcba.constants.ServiceMessageCodes;
 import com.mot.upd.pcba.dao.DispatchSerialNumberDAO;
+import com.mot.upd.pcba.dao.DispatchSerialNumberMySQLDAO;
 import com.mot.upd.pcba.dao.DispatchSerialNumberOracleDAO;
 import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
@@ -32,6 +33,9 @@ public class UPDDispatchSerialRestWebservice {
 		boolean isValidRequest = false;
 		boolean isValidSerial = false;
 		boolean isValidBuildType = false;
+		boolean isGreaterThanFive = false;
+		boolean isValidGPPID = false;
+		
 		// Check for Mandatory Fields in input
 		isMissing = validateMandatoryInputParam(dispatchSerialRequestPOJO);
 		if (isMissing) {
@@ -76,22 +80,44 @@ public class UPDDispatchSerialRestWebservice {
 			return Response.status(200).entity(dispatchSerialResponsePOJO)
 					.build();
 		}
-		
+		// check if Number of ULMA greater than 5
+		isGreaterThanFive = validateULMAAddress(dispatchSerialRequestPOJO);
+		if (isGreaterThanFive) {
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.ULMA_ADDRESS_GREATER_THAN_FIVE);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.ULMA_ADDRESS_GREATER_THAN_FIVE_MSG);
+			return Response.status(200).entity(dispatchSerialResponsePOJO)
+					.build();
+		}
+
+		// check if GPPID is numeric
+		isValidGPPID = validateGPPID(dispatchSerialRequestPOJO);
+		if (!isValidGPPID) {
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.INVALID_GPPID);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.INVALID_GPPID_MSG);
+			return Response.status(200).entity(dispatchSerialResponsePOJO)
+					.build();
+		}
+		// check if customer is valid
+		dispatchSerialRequestPOJO = verifyCustomer(dispatchSerialRequestPOJO);
+				
+				
 		
 		
 
-		DispatchSerialNumberDAO dispatchSerialNumberDAO=null;
+		DispatchSerialNumberDAO dispatchSerialNumberDAO = null;
 		String updConfig = DBUtil.dbConfigCheck();
-		
-		//Oracle
-		if(updConfig.equals("YES"))
-		{
-			 dispatchSerialNumberDAO = new DispatchSerialNumberOracleDAO();
+
+		// Oracle
+		if (updConfig.equals("YES")) {
+			dispatchSerialNumberDAO = new DispatchSerialNumberOracleDAO();
 		}
-		//MySQL
-		else
-		{
-			 dispatchSerialNumberDAO = new DispatchSerialNumberOracleDAO();
+		// MySQL
+		else {
+			dispatchSerialNumberDAO = new DispatchSerialNumberMySQLDAO();
 		}
 		;
 
@@ -104,18 +130,22 @@ public class UPDDispatchSerialRestWebservice {
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.dispatchSerialNumberIMEI(dispatchSerialRequestPOJO);
 				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND
-						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
 					return Response.status(200)
 							.entity(dispatchSerialResponsePOJO).build();
 				}
 				// If ULMA address not available return response
-				dispatchSerialResponsePOJO =dispatchSerialNumberDAO.dispatchULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
+				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
+						.dispatchULMAAddress(dispatchSerialRequestPOJO,
+								dispatchSerialResponsePOJO);
 				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_ULMA_AVAILABLE
-						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
 					return Response.status(200)
 							.entity(dispatchSerialResponsePOJO).build();
 				}
-				
+
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.updateDispatchStatusIMEI(dispatchSerialRequestPOJO,
 								dispatchSerialResponsePOJO);
@@ -126,10 +156,11 @@ public class UPDDispatchSerialRestWebservice {
 					.equals(PCBADataDictionary.REQUEST_VALIDATE)) {
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.validateSerialNumberIMEI(dispatchSerialRequestPOJO);
-				dispatchSerialResponsePOJO = dispatchSerialNumberDAO.validateULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
+				// dispatchSerialResponsePOJO =
+				// dispatchSerialNumberDAO.validateULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
 			}
 		}
-		
+
 		// * End Checking for IMEI
 		if (dispatchSerialRequestPOJO.getSnRequestType().trim()
 				.equals(PCBADataDictionary.MEID)) {
@@ -157,13 +188,16 @@ public class UPDDispatchSerialRestWebservice {
 							.entity(dispatchSerialResponsePOJO).build();
 				}
 				// If ULMA address not available return response
-				dispatchSerialResponsePOJO =dispatchSerialNumberDAO.dispatchULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
+				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
+						.dispatchULMAAddress(dispatchSerialRequestPOJO,
+								dispatchSerialResponsePOJO);
 				if (dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_ULMA_AVAILABLE
-						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION || dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.SQL_EXCEPTION
+						|| dispatchSerialResponsePOJO.getResponseCode() == ServiceMessageCodes.NO_DATASOURCE_FOUND) {
 					return Response.status(200)
 							.entity(dispatchSerialResponsePOJO).build();
 				}
-				
+
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.updateDispatchStatusMEID(dispatchSerialRequestPOJO,
 								dispatchSerialResponsePOJO);
@@ -175,22 +209,46 @@ public class UPDDispatchSerialRestWebservice {
 
 				dispatchSerialResponsePOJO = dispatchSerialNumberDAO
 						.validateSerialNumberMEID(dispatchSerialRequestPOJO);
+				// dispatchSerialResponsePOJO =
+				// dispatchSerialNumberDAO.validateULMAAddress(dispatchSerialRequestPOJO,dispatchSerialResponsePOJO);
 			}
 		}
-		
-		// End Checking for MEID
-		 
-		
-	
-		
-		
-	
-		
 
+		// End Checking for MEID
 		return Response.status(201).entity(dispatchSerialResponsePOJO).build();
 	}
-
 	
+	private DispatchSerialRequestPOJO verifyCustomer(DispatchSerialRequestPOJO dispatchSerialRequestPOJO){
+		
+		
+		if("".equalsIgnoreCase(dispatchSerialRequestPOJO.getCustomer()) || dispatchSerialRequestPOJO.getCustomer()==null || dispatchSerialRequestPOJO.getCustomer().length()==0){
+			dispatchSerialRequestPOJO.setCustomer(PCBADataDictionary.DEFAULT_CUSTOMER);
+		}
+		return dispatchSerialRequestPOJO;
+		
+	
+	}
+
+	private boolean validateGPPID(
+			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		// TODO Auto-generated method stub
+		try {
+			Integer.parseInt(dispatchSerialRequestPOJO.getGppdID());
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+
+	}
+
+	private boolean validateULMAAddress(
+			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		// TODO Auto-generated method stub
+		if (dispatchSerialRequestPOJO.getNumberOfUlma() > 5) {
+			return true;
+		}
+		return false;
+	}
 
 	private boolean validateBuildType(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
@@ -249,10 +307,10 @@ public class UPDDispatchSerialRestWebservice {
 			return true;
 
 		}
-		
+
 		if (dispatchSerialRequestPOJO.getCustomer() == ""
 				|| dispatchSerialRequestPOJO.getRequestType() == ""
-				|| dispatchSerialRequestPOJO.getSnRequestType() ==	""
+				|| dispatchSerialRequestPOJO.getSnRequestType() == ""
 				|| dispatchSerialRequestPOJO.getNumberOfUlma() == 0
 				|| dispatchSerialRequestPOJO.getGppdID() == ""
 				|| dispatchSerialRequestPOJO.getMascID() == ""
@@ -262,8 +320,7 @@ public class UPDDispatchSerialRestWebservice {
 			return true;
 
 		}
-		
-		
+
 		return false;
 	}
 
