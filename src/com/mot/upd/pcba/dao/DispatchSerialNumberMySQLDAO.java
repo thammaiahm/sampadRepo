@@ -233,6 +233,12 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method updateDispatchStatusIMEI");
 		return dispatchSerialResponsePOJO;
 	}
+	
+	/*
+	 * Validate if there are serial number available for disatch for IMEI
+	 * 
+	 * @param Request attribute
+	 */
 
 	public DispatchSerialResponsePOJO validateSerialNumberIMEI(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
@@ -297,7 +303,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	}
 
 	/*
-	 * MEID 
+	 * Select the serial number to be dispatched for MEID
 	 */
 	public DispatchSerialResponsePOJO dispatchSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
@@ -363,7 +369,9 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	}
 	
 	
-
+	/*
+	 * DIspatch MEID by updating the status
+	 */
 
 	public DispatchSerialResponsePOJO updateDispatchStatusMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
@@ -492,6 +500,11 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		return dispatchSerialResponsePOJO;
 	
 	}
+	/*
+	 * Validate if there are MEID serial number available for disatch 
+	 * 
+	 * @param Request attribute
+	 */
 	
 	public DispatchSerialResponsePOJO validateSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
@@ -555,7 +568,9 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	}
 
 	
-
+	/*
+	 * Dispatch ULMA Adress
+	 */
 	@Override
 	public DispatchSerialResponsePOJO dispatchULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
@@ -618,10 +633,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberMySQLDAO:Leaving Method dispatchULMAAddress");
+		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method dispatchULMAAddress");
 		return dispatchSerialResponsePOJO;
 	}
 
+	/*
+	 * validate if ULMA available for dispatch
+	
+	 */
 	@Override
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
@@ -685,7 +705,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberMySQLDAO:Leaving Method validateULMAAddress");
+		logger.info("DispatchSerialNumberMySQLDAO:Leavingd Method validateULMAAddress");
 		return dispatchSerialResponsePOJO;
 	}
 
