@@ -18,6 +18,9 @@ import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
 import com.mot.upd.pcba.utils.DBUtil;
 
+/**
+ * @author HRDJ36 Thammaiah M B
+ */
 public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 	private static Logger logger = Logger
 			.getLogger(DispatchSerialNumberOracleDAO.class);
@@ -226,8 +229,6 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 		logger.info("DispatchSerialNumberOracleDAO:Leaving Method updateDispatchStatusIMEI");
 		return dispatchSerialResponsePOJO;
 	}
-
-
 
 	/*
 	 * Validate if there are serial number available for disatch for IMEI
@@ -497,9 +498,13 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 
 		return dispatchSerialResponsePOJO;
 	}
+
 	/*
 	 * Validate if MEID available for Dispatch
-	 * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateSerialNumberMEID(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO)
+	 * 
+	 * @see
+	 * com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateSerialNumberMEID
+	 * (com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO)
 	 */
 	public DispatchSerialResponsePOJO validateSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
@@ -563,10 +568,14 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 		return response;
 
 	}
-	
+
 	/*
 	 * Dispatch ULMA Adress
-	 * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#dispatchULMAAddress(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO, com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
+	 * 
+	 * @see
+	 * com.mot.upd.pcba.dao.DispatchSerialNumberDAO#dispatchULMAAddress(com.
+	 * mot.upd.pcba.pojo.DispatchSerialRequestPOJO,
+	 * com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
 	 */
 	@Override
 	public DispatchSerialResponsePOJO dispatchULMAAddress(
@@ -637,10 +646,15 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 		return dispatchSerialResponsePOJO;
 
 	}
-/*
- * validate if ULMA available for dispatch
- * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateULMAAddress(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO, com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
- */
+
+	/*
+	 * validate if ULMA available for dispatch
+	 * 
+	 * @see
+	 * com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateULMAAddress(com.
+	 * mot.upd.pcba.pojo.DispatchSerialRequestPOJO,
+	 * com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
+	 */
 	@Override
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
@@ -706,5 +720,4 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 		return dispatchSerialResponsePOJO;
 	}
 
-	
 }

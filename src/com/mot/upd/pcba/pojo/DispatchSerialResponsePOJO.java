@@ -4,11 +4,22 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Author Thammaiah M B
+ * @author HRDJ36 Thammaiah M B
  */
 
 public class DispatchSerialResponsePOJO {
-	
+
+	@Override
+	public String toString() {
+		return "DispatchSerialResponsePOJO [newSerialNo=" + newSerialNo
+				+ ", buildType=" + buildType + ", customer=" + customer
+				+ ", dispatchedDate=" + dispatchedDate + ", mascID=" + mascID
+				+ ", gppdID=" + gppdID + ", requestType=" + requestType
+				+ ", responseCode=" + responseCode + ", responseMsg="
+				+ responseMsg + ", rsdID=" + rsdID + ", ulmaAddress="
+				+ ulmaAddress + "]";
+	}
+
 	private String newSerialNo;
 	private String buildType;
 	private String customer;
@@ -20,9 +31,8 @@ public class DispatchSerialResponsePOJO {
 	private String responseMsg;
 	private String rsdID;
 	private List<String> ulmaAddress = new ArrayList<String>();
-	
 
-public String getNewSerialNo() {
+	public String getNewSerialNo() {
 		return newSerialNo;
 	}
 
@@ -113,7 +123,7 @@ public String getNewSerialNo() {
 		responseCode = 0;
 		responseMsg = null;
 		rsdID = null;
-		ulmaAddress=null;
+		ulmaAddress = null;
 	}
 
 	public List<String> getUlmaAddress() {
@@ -123,7 +133,5 @@ public String getNewSerialNo() {
 	public void setUlmaAddress(List<String> ulmaAddress) {
 		this.ulmaAddress = ulmaAddress;
 	}
-
-	
 
 }

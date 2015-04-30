@@ -1,6 +1,7 @@
 package com.mot.upd.pcba.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,11 @@ import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
 import com.mot.upd.pcba.utils.DBUtil;
 
-public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
+/**
+ * @author HRDJ36 Thammaiah M B
+ */
+
+public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 
 	private static Logger logger = Logger
 			.getLogger(DispatchSerialNumberMySQLDAO.class);
@@ -89,7 +94,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-		
+
 		logger.debug("DispatchSerialNumberMySQLDAO:Leaving Method dispatchSerialNumberIMEI");
 		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method dispatchSerialNumberIMEI");
 		return response;
@@ -110,7 +115,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
-			
+
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
@@ -176,35 +181,36 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			dispatchSerialResponsePOJO.setRequestType(dispatchSerialRequestPOJO
 					.getRequestType());
 			// End setting remaining response parameter
-			
-			//Update ULMA
-			
+
+			// Update ULMA
+
 			// Updating ULMA Address
-						List<String> ulmaAddress = dispatchSerialResponsePOJO
-								.getUlmaAddress();
-						String ulmaAddressString = null;
-						for (String address : ulmaAddress) {
+			List<String> ulmaAddress = dispatchSerialResponsePOJO
+					.getUlmaAddress();
+			String ulmaAddressString = null;
+			for (String address : ulmaAddress) {
 
-							if (ulmaAddressString == null) {
-								ulmaAddressString = "'" + address + "'";
-							} else {
-								ulmaAddressString = ulmaAddressString + "," + "'" + address
-										+ "'";
-							}
+				if (ulmaAddressString == null) {
+					ulmaAddressString = "'" + address + "'";
+				} else {
+					ulmaAddressString = ulmaAddressString + "," + "'" + address
+							+ "'";
+				}
 
-						}
+			}
 
-						// update ULMA table
-						preparedStmt = null;
-						String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("+ulmaAddressString+");";
-						preparedStmt = con.prepareStatement(updateDispatchStatusForULMA);
-						preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
-						preparedStmt.setString(2, PCBADataDictionary.DISPATCHED);
-						preparedStmt.setString(3, dispatchSerialResponsePOJO
-								.getNewSerialNo().trim());
-						
-						int rows = preparedStmt.executeUpdate();
-				// update ULMA table
+			// update ULMA table
+			preparedStmt = null;
+			String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("
+					+ ulmaAddressString + ");";
+			preparedStmt = con.prepareStatement(updateDispatchStatusForULMA);
+			preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
+			preparedStmt.setString(2, PCBADataDictionary.DISPATCHED);
+			preparedStmt.setString(3, dispatchSerialResponsePOJO
+					.getNewSerialNo().trim());
+
+			int rows = preparedStmt.executeUpdate();
+			// update ULMA table
 
 			con.commit();
 		} catch (SQLException e) {
@@ -233,7 +239,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method updateDispatchStatusIMEI");
 		return dispatchSerialResponsePOJO;
 	}
-	
+
 	/*
 	 * Validate if there are serial number available for disatch for IMEI
 	 * 
@@ -249,7 +255,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
-			
+
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -315,7 +321,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
-			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG+e.getMessage());
+			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
+					+ e.getMessage());
 			return response;
 		}
 
@@ -324,7 +331,6 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			con = DBUtil.getConnection(ds);
 
 			String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_meid WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? and Protocol_name=? limit 1";
-			
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 
@@ -356,7 +362,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		} catch (SQLException e) {
 			System.out.println("error=" + e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
-			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG+e.getMessage());
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
 
 		} finally {
 
@@ -367,8 +374,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method dispatchSerialNumberMEID");
 		return response;
 	}
-	
-	
+
 	/*
 	 * DIspatch MEID by updating the status
 	 */
@@ -387,7 +393,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
-					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG+e.getMessage());
+					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
+							+ e.getMessage());
 			return dispatchSerialResponsePOJO;
 		}
 		try {
@@ -399,7 +406,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 
 			con.setAutoCommit(false);
 			String updateDispatchStatusIMEI = "UPDATE upd.upd_pcba_pgm_meid SET DISPATCH_DATE=NOW(),DISPATCH_STATUS=?,RSD_ID=?,MASC_ID=?,CLIENT_REQUEST_DATETIME=NOW(),LAST_MOD_BY=?,LAST_MOD_DATETIME=NOW() WHERE SERIAL_NO=?";
-			
+
 			preparedStmt = con.prepareStatement(updateDispatchStatusIMEI);
 			preparedStmt.setString(1, PCBADataDictionary.DISPATCHED);
 			preparedStmt.setString(2, dispatchSerialRequestPOJO.getRsdID());
@@ -440,12 +447,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 				} while (rs.next());
 
 			}
-			
-			dispatchSerialResponsePOJO.setResponseCode(ServiceMessageCodes.SUCCESS);
-			dispatchSerialResponsePOJO.setResponseMsg(ServiceMessageCodes.OPERATION_SUCCESS);
-			dispatchSerialResponsePOJO.setRequestType(dispatchSerialRequestPOJO.getRequestType());
-			//End setting remaining response parameter
-			
+
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.SUCCESS);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.OPERATION_SUCCESS);
+			dispatchSerialResponsePOJO.setRequestType(dispatchSerialRequestPOJO
+					.getRequestType());
+			// End setting remaining response parameter
+
 			// Updating ULMA Address
 			List<String> ulmaAddress = dispatchSerialResponsePOJO
 					.getUlmaAddress();
@@ -463,15 +473,16 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 
 			// update ULMA table
 			preparedStmt = null;
-			String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("+ulmaAddressString+");";
+			String updateDispatchStatusForULMA = "update upd.upd_ulma_repos set LAST_MOD_BY=?,dispatched_datetime=now(),is_dispatched=?,LAST_MOD_DATETIME=NOW(),SERIAL_NO=? where ulma in("
+					+ ulmaAddressString + ");";
 			preparedStmt = con.prepareStatement(updateDispatchStatusForULMA);
 			preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
 			preparedStmt.setString(2, PCBADataDictionary.DISPATCHED);
 			preparedStmt.setString(3, dispatchSerialResponsePOJO
 					.getNewSerialNo().trim());
-			
+
 			int rows = preparedStmt.executeUpdate();
-	// update ULMA table
+			// update ULMA table
 
 			con.commit();
 		} catch (SQLException e) {
@@ -480,7 +491,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
 			dispatchSerialResponsePOJO
-					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG+e.getMessage());
+					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+							+ e.getMessage());
 			try {
 				con.rollback();
 			} catch (SQLException e1) {
@@ -498,14 +510,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		logger.debug("DispatchSerialNumberMySQLDAO:Leaving Method updateDispatchStatusMEID");
 		logger.info("DispatchSerialNumberMySQLDAO:Leaving Method updateDispatchStatusMEID");
 		return dispatchSerialResponsePOJO;
-	
+
 	}
+
 	/*
-	 * Validate if there are MEID serial number available for disatch 
+	 * Validate if there are MEID serial number available for disatch
 	 * 
 	 * @param Request attribute
 	 */
-	
+
 	public DispatchSerialResponsePOJO validateSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
 		logger.debug("DispatchSerialNumberMySQLDAO:Entered Method validateSerialNumberMEID");
@@ -516,7 +529,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
-			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG+e.getMessage());
+			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
+					+ e.getMessage());
 			return response;
 		}
 
@@ -554,7 +568,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
-			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG+e.getMessage());
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
 
 		} finally {
 
@@ -567,7 +582,6 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 
 	}
 
-	
 	/*
 	 * Dispatch ULMA Adress
 	 */
@@ -640,7 +654,6 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 
 	/*
 	 * validate if ULMA available for dispatch
-	
 	 */
 	@Override
 	public DispatchSerialResponsePOJO validateULMAAddress(
@@ -675,7 +688,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			if (rs.next()) {
 				do {
 
-				      //Nothing
+					// Nothing
 
 				} while (rs.next());
 				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
@@ -709,9 +722,6 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 		logger.info("DispatchSerialNumberMySQLDAO:Leavingd Method validateULMAAddress");
 		return dispatchSerialResponsePOJO;
 	}
-	//End
-
-	
-
+	// End
 
 }

@@ -3,6 +3,9 @@ package com.mot.upd.pcba.dao;
 import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
 
+/**
+ * @author HRDJ36 Thammaiah M B
+ */
 public interface DispatchSerialNumberDAO {
 
 	public DispatchSerialResponsePOJO dispatchSerialNumberIMEI(
@@ -32,7 +35,5 @@ public interface DispatchSerialNumberDAO {
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO);
-
-	
 
 }
