@@ -24,7 +24,6 @@ import com.mot.upd.pcba.utils.DBUtil;
  */
 public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 	private static Logger logger = Logger.getLogger(PCBASwapUPDUpdateSQLDAO.class);
-
 	
 	private DataSource ds;
 	private Connection con = null;

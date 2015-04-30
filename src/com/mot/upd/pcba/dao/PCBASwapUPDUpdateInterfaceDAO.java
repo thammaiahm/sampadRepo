@@ -11,6 +11,7 @@ import com.mot.upd.pcba.pojo.PCBASerialNoUPdateResponse;
  *
  */
 public interface PCBASwapUPDUpdateInterfaceDAO {
+	
 
 	PCBASerialNoUPdateResponse serialNumberInfo(
 			PCBASerialNoUPdateQueryInput pCBASerialNoUPdateQueryInput);
