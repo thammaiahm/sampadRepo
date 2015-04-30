@@ -27,6 +27,7 @@ import com.mot.upd.pcba.utils.DBUtil;
 public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO{
 	private static Logger logger = Logger.getLogger(PCBASwapUPDUpdateOracleDAO.class);
 
+	
 	private DataSource ds;
 	private Connection con = null;
 	private Connection connection = null;

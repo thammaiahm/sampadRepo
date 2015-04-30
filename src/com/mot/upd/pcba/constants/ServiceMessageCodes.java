@@ -75,4 +75,5 @@ public class ServiceMessageCodes {
 	public static final String OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE_MSG ="Old Serialno not found in Shipment table";
 	public static final String READING_OLD_SERIAL_NO_INTO_NEW_SERIAL_NO ="Reading old serial number data and Inserted into new Serial Number in Shipment table";
 
+	
 }

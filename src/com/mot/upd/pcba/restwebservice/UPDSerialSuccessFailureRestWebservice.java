@@ -36,6 +36,7 @@ public class UPDSerialSuccessFailureRestWebservice {
 		PCBAProgramResponse pcbaProgramResponse = new PCBAProgramResponse();
 		UPDSerialSuccessFailureInterfaceDAO updSerialSuccessFailureInterfaceDAO =null;
 		
+		
 		String updConfig =DBUtil.dbConfigCheck();
 		
 		if(updConfig!=null && updConfig.equals("YES")){

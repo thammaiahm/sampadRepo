@@ -23,6 +23,7 @@ import com.mot.upd.pcba.utils.DBUtil;
 public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInterfaceDAO{
 	private static Logger logger = Logger.getLogger(UPDSerialSuccessFailureSQLDAO.class);
 
+	
 	private DataSource ds;
 	private Connection con = null;
 	private PreparedStatement preparedStmt = null;

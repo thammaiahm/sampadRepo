@@ -34,6 +34,7 @@ public class DBUtil {
 		} catch (NamingException e) {
 			throw e;
 		}
+		
 		logger.info("DataSource method end");
 
 		return ds;
