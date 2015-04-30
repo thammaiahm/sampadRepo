@@ -110,13 +110,14 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
+			
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
 					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 							+ e.getMessage());
-			return response;
+			return dispatchSerialResponsePOJO;
 		}
 		try {
 			// get database connection
@@ -242,6 +243,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
+			
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -373,11 +375,12 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
 			logger.error(e.getMessage());
+			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
 					.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG+e.getMessage());
-			return response;
+			return dispatchSerialResponsePOJO;
 		}
 		try {
 			// get database connection
@@ -557,6 +560,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	public DispatchSerialResponsePOJO dispatchULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		logger.debug("DispatchSerialNumberMySQLDAO:Entered Method dispatchULMAAddress");
+		logger.info("DispatchSerialNumberMySQLDAO:Entered Method dispatchULMAAddress");
 		List<String> ulmaAddress = new ArrayList<String>();
 		// TODO Auto-generated method stub
 		try {
@@ -588,6 +593,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 				} while (rs.next());
 				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
 			} else {
+				logger.debug("DispatchSerialNumberMySQLDAO::dispatchULMAAddress:No ULMA to dispatch");
+				logger.info("DispatchSerialNumberMySQLDAO::dispatchULMAAddress:No ULMA to dispatch");
 				dispatchSerialResponsePOJO.reset();
 				dispatchSerialResponsePOJO
 						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
@@ -598,6 +605,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			}
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
@@ -618,12 +626,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		logger.debug("DispatchSerialNumberMySQLDAO:Entered Method validateULMAAddress");
+		logger.info("DispatchSerialNumberMySQLDAO:Entered Method validateULMAAddress");
 		List<String> ulmaAddress = new ArrayList<String>();
 		// TODO Auto-generated method stub
 		try {
 
 			ds = DBUtil.getMySqlDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
@@ -649,6 +660,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 				} while (rs.next());
 				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
 			} else {
+				logger.debug("DispatchSerialNumberMySQLDAO::validateULMAAddress:No ULMA Available in DB");
+				logger.info("DispatchSerialNumberMySQLDAO::validateULMAAddress:No ULMA Available in DB");
 				dispatchSerialResponsePOJO.reset();
 				dispatchSerialResponsePOJO
 						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
@@ -659,6 +672,7 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO  {
 			}
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
