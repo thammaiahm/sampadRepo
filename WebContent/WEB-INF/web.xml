@@ -29,7 +29,7 @@
         <param-value>com.mot.upd.pcba.restwebservice.UPDSerialSuccessFailureRestWebservice</param-value>
     </init-param>
   </servlet>
-  <servlet>
+     <servlet>
     <servlet-name>UPDSWAPUpdateRestWebservice</servlet-name>
     <servlet-class>
 			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
@@ -40,10 +40,10 @@
     </init-param>       
     <init-param>
         <param-name>resteasy.resources</param-name>
-        <param-value>com.mot.upd.pcba.restwebservice.UPDSerialSuccessFailureRestWebservice</param-value>
+        <param-value>com.mot.upd.pcba.restwebservice.UPDSWAPUpdateRestWebservice</param-value>
     </init-param>
   </servlet>
-  <servlet>
+   <servlet>
     <servlet-name>R12SnSwapUpdateRestWebservice</servlet-name>
     <servlet-class>
 			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher

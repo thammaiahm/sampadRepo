@@ -47,18 +47,18 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 		try {
 			// get database connection
 			con = DBUtil.getConnection(ds);
-			String IMEIStatusSuccess_SQL="update lock_code  set set LAST_MOD_BY='pcba_pgm_success',motorola_master='"+pcbaProgramQueryInput.getMsl()+"',LAST_MOD_DATETIME=sysdate WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String IMEIStatusSuccess_SQL="update upd.upd_lock_code  set LAST_MOD_BY='pcba_pgm_success',motorola_master='"+pcbaProgramQueryInput.getMsl()+"',LAST_MOD_DATETIME=NOW() WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			preparedStmt = con.prepareStatement(IMEIStatusSuccess_SQL);
 			preparedStmt.execute();
 			logger.info("IMEI MY SQL Query:"+IMEIStatusSuccess_SQL);
 
-			String MYSQL_QueryIMEI ="update upd_pcba_pgm_imei  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryIMEI ="update upd.upd_pcba_pgm_imei  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			conn=DBUtil.getConnection(ds);
 			pstmt = conn.prepareStatement(MYSQL_QueryIMEI);
 			pstmt.execute();
 			logger.info("IMEIStatusSuccess-MY SQLQueryIMEI:"+MYSQL_QueryIMEI);
 
-			String MYSQL_QueryMEID ="update upd_pcba_pgm_meid  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryMEID ="update upd.upd_pcba_pgm_meid  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			connection=DBUtil.getConnection(ds);
 			prestmt = connection.prepareStatement(MYSQL_QueryMEID);
 			prestmt.execute();
@@ -99,18 +99,18 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String IMEIStatusFailure_SQL="update lock_code  set set LAST_MOD_BY='pcba_pgm_success',motorola_master='"+pcbaProgramQueryInput.getMsl()+"',LAST_MOD_DATETIME=sysdate WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String IMEIStatusFailure_SQL="update upd.upd_lock_code  set LAST_MOD_BY='pcba_pgm_failure',motorola_master='"+pcbaProgramQueryInput.getMsl()+"',LAST_MOD_DATETIME=NOW() WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			preparedStmt = con.prepareStatement(IMEIStatusFailure_SQL);
 			preparedStmt.execute();
 			logger.info("IMEI MY SQL Query:"+IMEIStatusFailure_SQL);
 
-			String MYSQL_QueryIMEI ="update upd_pcba_pgm_imei  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryIMEI ="update upd.upd_pcba_pgm_imei  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_failure' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			conn=DBUtil.getConnection(ds);
 			pstmt = conn.prepareStatement(MYSQL_QueryIMEI);
 			pstmt.execute();
 			logger.info("IMEIStatusFailure-MY SQLQueryIMEI:"+MYSQL_QueryIMEI);
 
-			String MYSQL_QueryMEID ="update upd_pcba_pgm_meid  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryMEID ="update upd.upd_pcba_pgm_meid  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_failure' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			connection=DBUtil.getConnection(ds);
 			prestmt = connection.prepareStatement(MYSQL_QueryMEID);
 			prestmt.execute();
@@ -148,19 +148,19 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 			con = DBUtil.getConnection(ds);
 
 			StringBuffer sb=new StringBuffer();
-			String MEIDStatusSuccess_SQL="update lock_code  set set LAST_MOD_BY='pcba_pgm_success',LAST_MOD_DATETIME=sysdate WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MEIDStatusSuccess_SQL="update upd.upd_lock_code set LAST_MOD_BY='pcba_pgm_success',LAST_MOD_DATETIME=NOW() WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			preparedStmt = con.prepareStatement(MEIDStatusSuccess_SQL);
 			preparedStmt.execute();
 
 			logger.info("MEID MY SQL Query:"+sb.toString());
 
-			String MYSQL_QueryIMEI ="update upd_pcba_pgm_imei  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryIMEI ="update upd.upd_pcba_pgm_imei  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			conn=DBUtil.getConnection(ds);
 			pstmt = conn.prepareStatement(MYSQL_QueryIMEI);
 			pstmt.execute();
 			logger.info("MEIDStatusSuccess-MY SQLQueryIMEI:"+MYSQL_QueryIMEI);
 
-			String MYSQL_QueryMEID ="update upd_pcba_pgm_meid  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryMEID ="update upd.upd_pcba_pgm_meid  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			connection=DBUtil.getConnection(ds);
 			prestmt = connection.prepareStatement(MYSQL_QueryMEID);
 			prestmt.execute();
@@ -174,7 +174,7 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 		}catch(Exception e){
 			logger.info("Update MEIDStatusSuccess error:"+e);
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
-			response.setResponseMessage(ServiceMessageCodes.SQL_EXCEPTION_MSG);
+			response.setResponseMessage(ServiceMessageCodes.SQL_EXCEPTION_MSG+e.getMessage());
 		}
 		finally{
 			DBUtil.connectionClosed(con, preparedStmt);
@@ -199,20 +199,20 @@ public class UPDSerialSuccessFailureSQLDAO implements UPDSerialSuccessFailureInt
 		try{
 			// get database connection
 			con = DBUtil.getConnection(ds);
-			String MEIDStatusFailure_SQL="update lock_code  set set LAST_MOD_BY='pcba_pgm_success',LAST_MOD_DATETIME=sysdate WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MEIDStatusFailure_SQL="update upd.upd_lock_code  set LAST_MOD_BY='pcba_pgm_failure',LAST_MOD_DATETIME=NOW() WHERE serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 
 			preparedStmt = con.prepareStatement(MEIDStatusFailure_SQL);
 			preparedStmt.execute();
 
 			logger.info("updateMEIDStatusFailure MY SQL Query:"+MEIDStatusFailure_SQL);
 
-			String MYSQL_QueryIMEI ="update upd_pcba_pgm_imei  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryIMEI ="update upd.upd_pcba_pgm_imei  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_failure' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			conn=DBUtil.getConnection(ds);
 			pstmt = conn.prepareStatement(MYSQL_QueryIMEI);
 			pstmt.execute();
 			logger.info("MEIDStatusFailure-MY SQLQueryIMEI:"+MYSQL_QueryIMEI);
 
-			String MYSQL_QueryMEID ="update upd_pcba_pgm_meid  set PGM_DATE=sysdate,PGM_STATUS='pcba_pgm_success' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
+			String MYSQL_QueryMEID ="update upd.upd_pcba_pgm_meid  set PGM_DATE=NOW(),PGM_STATUS='pcba_pgm_failure' where serial_no='"+pcbaProgramQueryInput.getSerialNO()+"'";
 			connection=DBUtil.getConnection(ds);
 			prestmt = connection.prepareStatement(MYSQL_QueryMEID);
 			prestmt.execute();

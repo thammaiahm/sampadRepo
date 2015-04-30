@@ -7,9 +7,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.mot.upd.pcba.constants.ServiceMessageCodes;
-import com.mot.upd.pcba.dao.PCBASwapUPDUpdateDAO;
+import com.mot.upd.pcba.dao.PCBASwapUPDUpdateInterfaceDAO;
+import com.mot.upd.pcba.dao.PCBASwapUPDUpdateOracleDAO;
 import com.mot.upd.pcba.pojo.PCBASerialNoUPdateQueryInput;
 import com.mot.upd.pcba.pojo.PCBASerialNoUPdateResponse;
+import com.mot.upd.pcba.utils.DBUtil;
 
 
 
@@ -31,6 +33,15 @@ public class UPDSWAPUpdateRestWebservice {
 		boolean isMissing=false;
 		boolean isValidSerialNoIn=false;
 		boolean isValidSerialNoOut=false;
+
+		String updConfig =DBUtil.dbConfigCheck();
+		PCBASwapUPDUpdateInterfaceDAO pcbaSwapUPDUpdateInterfaceDAO =null;
+
+		if(updConfig!=null && updConfig.equals("YES")){
+			pcbaSwapUPDUpdateInterfaceDAO = new PCBASwapUPDUpdateOracleDAO();
+		}else{
+			pcbaSwapUPDUpdateInterfaceDAO = new PCBASwapUPDUpdateOracleDAO();
+		}
 
 		//Check for Mandatory Fields in input
 		isMissing =validateMandatoryInputParam(pCBASerialNoUPdateQueryInput);
@@ -61,11 +72,11 @@ public class UPDSWAPUpdateRestWebservice {
 			return Response.status(200).entity(pcbaSerialNoUPdateResponse).build();
 
 		}
-		PCBASwapUPDUpdateDAO pcbaSwapUPDUpdateDAO =new PCBASwapUPDUpdateDAO();
 		
-		PCBASerialNoUPdateResponse response = pcbaSwapUPDUpdateDAO.serialNumberInfo(pCBASerialNoUPdateQueryInput);
-		
-		
+
+		PCBASerialNoUPdateResponse response = pcbaSwapUPDUpdateInterfaceDAO.serialNumberInfo(pCBASerialNoUPdateQueryInput);
+
+
 		return Response.status(200).entity(response).build();
 
 	}

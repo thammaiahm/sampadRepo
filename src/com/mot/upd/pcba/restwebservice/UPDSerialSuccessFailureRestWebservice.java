@@ -124,12 +124,21 @@ public class UPDSerialSuccessFailureRestWebservice {
 	private boolean validateMandatoryInputParam(
 			PCBAProgramQueryInput pcbaProgramQueryInput) {
 		// TODO Auto-generated method stub
-		if(pcbaProgramQueryInput.getSerialNO()==null || pcbaProgramQueryInput.getRsdID()==null || pcbaProgramQueryInput.getMascID()==null || pcbaProgramQueryInput.getStatus()==null || pcbaProgramQueryInput.getMsl()==null || pcbaProgramQueryInput.getOtksl()==null || pcbaProgramQueryInput.getServicePassCode()==null || pcbaProgramQueryInput.getSnType()==null){
+		if(pcbaProgramQueryInput.getSerialNO()==null || pcbaProgramQueryInput.getRsdID()==null || pcbaProgramQueryInput.getMascID()==null || pcbaProgramQueryInput.getStatus()==null || pcbaProgramQueryInput.getSnType()==null){
 			return true;
 		}
-		if(pcbaProgramQueryInput.getSerialNO().equals("") || pcbaProgramQueryInput.getRsdID().equals("") || pcbaProgramQueryInput.getMascID().equals("") || pcbaProgramQueryInput.getStatus().equals("") || pcbaProgramQueryInput.getMsl().equals("") || pcbaProgramQueryInput.getOtksl().equals("") || pcbaProgramQueryInput.getServicePassCode().equals("") || pcbaProgramQueryInput.getSnType().equals("")){
+		if(pcbaProgramQueryInput.getSerialNO().equals("") || pcbaProgramQueryInput.getRsdID().equals("") || pcbaProgramQueryInput.getMascID().equals("") || pcbaProgramQueryInput.getStatus().equals("") || pcbaProgramQueryInput.getSnType().equals("")){
 			return true;
 		}
+		
+		if(pcbaProgramQueryInput.getMsl()==null && pcbaProgramQueryInput.getOtksl()==null && pcbaProgramQueryInput.getServicePassCode()==null){
+			return true;
+		}
+		
+		if(pcbaProgramQueryInput.getMsl().equals("") && pcbaProgramQueryInput.getOtksl().equals("") && pcbaProgramQueryInput.getServicePassCode().equals("")){
+			return true;
+		}
+		
 		return false;
 	}
 
