@@ -32,11 +32,14 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 	 */
 	public DispatchSerialResponsePOJO dispatchSerialNumberIMEI(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method dispatchSerialNumberIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method dispatchSerialNumberIMEI");
 
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -66,6 +69,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::dispatchSerialNumberIMEI:No Serial number available in DB for dispatch");
+				logger.info("DispatchSerialNumberOracleDAO::dispatchSerialNumberIMEI:No Serial number available in DB for dispatch");
 				response.setResponseCode(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND);
 				response.setResponseMsg(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND_MSG);
 
@@ -73,6 +78,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			System.out.println("error=" + e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
@@ -83,7 +89,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method dispatchSerialNumberIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method dispatchSerialNumberIMEI");
 		return response;
 	}
 
@@ -95,10 +102,13 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
 		// TODO Auto-generated method stub
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method updateDispatchStatusIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method updateDispatchStatusIMEI");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
@@ -191,7 +201,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 
 			con.commit();
 		} catch (SQLException e) {
-			System.out.println("error=" + e.getMessage());
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
@@ -212,18 +222,12 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method updateDispatchStatusIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method updateDispatchStatusIMEI");
 		return dispatchSerialResponsePOJO;
 	}
 
-	/*
-	 * public DispatchSerialResponsePOJO getULMAAddress(
-	 * DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
-	 * DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
-	 * 
-	 * 
-	 * }
-	 */
+
 
 	/*
 	 * Validate if there are serial number available for disatch for IMEI
@@ -233,10 +237,13 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 
 	public DispatchSerialResponsePOJO validateSerialNumberIMEI(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method validateSerialNumberIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method validateSerialNumberIMEI");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -265,6 +272,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::validateSerialNumberIMEI:No Serial Number  in DB");
+				logger.info("DispatchSerialNumberOracleDAO::validateSerialNumberIMEI:No Serial Number  in DB");
 				response.setResponseCode(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND);
 				response.setResponseMsg(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND_MSG);
 
@@ -272,7 +281,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error=" + e.getMessage());
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
@@ -282,7 +291,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method validateSerialNumberIMEI");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method validateSerialNumberIMEI");
 		return response;
 	}
 
@@ -291,10 +301,13 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 	 */
 	public DispatchSerialResponsePOJO dispatchSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method dispatchSerialNumberMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method dispatchSerialNumberMEID");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -326,6 +339,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::dispatchSerialNumberMEID:No Serial number available for dispatch");
+				logger.info("DispatchSerialNumberOracleDAO:dispatchSerialNumberMEID:No Serial number available for dispatch");
 				response.setResponseCode(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND);
 				response.setResponseMsg(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND_MSG);
 
@@ -333,7 +348,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error=" + e.getMessage());
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
@@ -343,6 +358,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method dispatchSerialNumberMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method dispatchSerialNumberMEID");
 		return response;
 	}
 
@@ -352,10 +369,13 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 	public DispatchSerialResponsePOJO updateDispatchStatusMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method updateDispatchStatusMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method updateDispatchStatusMEID");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
@@ -451,7 +471,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 
 			con.commit();
 		} catch (SQLException e) {
-			System.out.println("error=" + e.getMessage());
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
@@ -472,16 +492,24 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method updateDispatchStatusMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method updateDispatchStatusMEID");
 
 		return dispatchSerialResponsePOJO;
 	}
-
+	/*
+	 * Validate if MEID available for Dispatch
+	 * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateSerialNumberMEID(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO)
+	 */
 	public DispatchSerialResponsePOJO validateSerialNumberMEID(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method validateSerialNumberMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method validateSerialNumberMEID");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			response.setResponseMsg(ServiceMessageCodes.NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG
 					+ e.getMessage());
@@ -511,6 +539,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::validateSerialNumberMEID:No Serial number in DB");
+				logger.info("DispatchSerialNumberOracleDAO::validateSerialNumberMEID:No Serial number in DB");
 				response.setResponseCode(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND);
 				response.setResponseMsg(ServiceMessageCodes.NEW_SERIAL_NO_NOT_FOUND_MSG);
 
@@ -518,7 +548,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error=" + e.getMessage());
+			logger.error(e.getMessage());
 			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
@@ -528,21 +558,29 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method validateSerialNumberMEID");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method validateSerialNumberMEID");
 		return response;
 
 	}
-
+	
+	/*
+	 * Dispatch ULMA Adress
+	 * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#dispatchULMAAddress(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO, com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
+	 */
 	@Override
 	public DispatchSerialResponsePOJO dispatchULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method dispatchULMAAddress");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method dispatchULMAAddress");
 		List<String> ulmaAddress = new ArrayList<String>();
 		// TODO Auto-generated method stub
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
@@ -568,6 +606,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 				dispatchSerialResponsePOJO.setUlmaAddress(ulmaAddress);
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::dispatchULMAAddress:No ULMA to dispatch");
+				logger.info("DispatchSerialNumberOracleDAO::dispatchULMAAddress:No ULMA to dispatch");
 				dispatchSerialResponsePOJO.reset();
 				dispatchSerialResponsePOJO
 						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
@@ -578,6 +618,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
@@ -590,19 +631,27 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method dispatchULMAAddress");
+		logger.info("DispatchSerialNumberOracleDAO:Leaving Method dispatchULMAAddress");
 
 		return dispatchSerialResponsePOJO;
 
 	}
-
+/*
+ * validate if ULMA available for dispatch
+ * @see com.mot.upd.pcba.dao.DispatchSerialNumberDAO#validateULMAAddress(com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO, com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO)
+ */
 	@Override
 	public DispatchSerialResponsePOJO validateULMAAddress(
 			DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
 			DispatchSerialResponsePOJO dispatchSerialResponsePOJO) {
+		logger.debug("DispatchSerialNumberOracleDAO:Entered Method validateULMAAddress");
+		logger.info("DispatchSerialNumberOracleDAO:Entered Method validateULMAAddress");
 		try {
 
 			ds = DBUtil.getOracleDataSource();
 		} catch (NamingException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.NO_DATASOURCE_FOUND);
 			dispatchSerialResponsePOJO
@@ -627,6 +676,8 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 				} while (rs.next());
 
 			} else {
+				logger.debug("DispatchSerialNumberOracleDAO::validateULMAAddress:No ULMA Available in DB");
+				logger.info("DispatchSerialNumberOracleDAO::validateULMAAddress:No ULMA Available in DB");
 				dispatchSerialResponsePOJO.reset();
 				dispatchSerialResponsePOJO
 						.setResponseCode(ServiceMessageCodes.NO_ULMA_AVAILABLE);
@@ -637,6 +688,7 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			}
 
 		} catch (SQLException e) {
+			logger.error(e.getMessage());
 			dispatchSerialResponsePOJO.reset();
 			dispatchSerialResponsePOJO
 					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
@@ -649,49 +701,10 @@ public class DispatchSerialNumberOracleDAO implements DispatchSerialNumberDAO {
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
 		}
-
+		logger.debug("DispatchSerialNumberOracleDAO:Leaving Method validateULMAAddress");
+		logger.info("DispatchSerialNumberOracleDAO:Leavingd Method validateULMAAddress");
 		return dispatchSerialResponsePOJO;
 	}
 
-	// Method to be removed
-	/*
-	 * public DispatchSerialResponsePOJO updateULMAAddress(
-	 * DispatchSerialRequestPOJO dispatchSerialRequestPOJO,
-	 * DispatchSerialResponsePOJO dispatchSerialResponsePOJO, Connection conn)
-	 * throws SQLException {
-	 * 
-	 * try { // get database connection List<String> ulmaAddress =
-	 * dispatchSerialResponsePOJO.getUlmaAddress(); String
-	 * ulmaAddressString=null; for (String address : ulmaAddress) {
-	 * 
-	 * if(ulmaAddressString==null) { ulmaAddressString="'"+address+"'"; } else {
-	 * ulmaAddressString=ulmaAddressString+","+"'"+address+"'"; }
-	 * 
-	 * }
-	 * 
-	 * 
-	 * 
-	 * // update repo table preparedStmt=null; String updateDispatchStatusIMEI =
-	 * "UPDATE upd_ulma_detail  SET LAST_MOD_USER=?,LAST_MOD_DATETIME=SYSDATE,SERIAL_NO=?,ATTRIBUTE_STATE=? WHERE ATTRIBUTE_VALUE IN("
-	 * +ulmaAddressString+")"; preparedStmt =
-	 * conn.prepareStatement(updateDispatchStatusIMEI);
-	 * preparedStmt.setString(1, PCBADataDictionary.MODIFIED_BY);
-	 * preparedStmt.setString(2, dispatchSerialResponsePOJO
-	 * .getNewSerialNo().trim()); preparedStmt.setString(3,
-	 * PCBADataDictionary.DISPATCHED); //preparedStmt.setString(4,
-	 * ulmaAddressString);
-	 * 
-	 * int rows=preparedStmt.executeUpdate();
-	 * 
-	 * 
-	 * 
-	 * con.commit(); } finally {
-	 * 
-	 * preparedStmt.close();
-	 * 
-	 * }
-	 * 
-	 * return dispatchSerialResponsePOJO; }
-	 */
-
+	
 }
