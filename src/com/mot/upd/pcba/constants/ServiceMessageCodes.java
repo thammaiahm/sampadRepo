@@ -42,6 +42,7 @@ public class ServiceMessageCodes {
 	//public static final int IMEI_SUCCESS = 5016;
 	public static final int IMEI_FAILURE = 5017;
 	public static final int OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE = 5018;
+	public static final int OLD_SERIAL_NO_NOT_FOUND_IN_WARRANTY_INFO_TABLE = 5019;
 	
 	// Thammaiah added
 	// Messages for dispatch serial no WS
@@ -74,6 +75,6 @@ public class ServiceMessageCodes {
 	public static final String PCBA_INPUT_PARAM_MISSING = "Following Fields are mandatory- ClientIP,mascID,serialNoIn,serialNoOut,serialNoType,repairdate.Please re-enter and try again.";
 	public static final String OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE_MSG ="Old Serialno not found in Shipment table";
 	public static final String READING_OLD_SERIAL_NO_INTO_NEW_SERIAL_NO ="Reading old serial number data and Inserted into new Serial Number in Shipment table";
-
+	public static final String  OLD_SERIAL_NO_NOT_FOUND_IN_WARRANTY_INFO_TABLE_MSG="Old Serialno not found in warranty info table";
 	
 }
