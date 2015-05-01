@@ -11,7 +11,7 @@ public class ServiceMessageCodes {
 	public static final int NO_DATASOURCE_FOUND = 8001;
 	public static final int SQL_EXCEPTION = 8001;
 
-	// Common Messages added
+	// Common Messages
 	public static final String NO_DATASOURCE_FOUND_DISPATCH_SERIAL_MSG = "Error:Please Contact Support Team    Error Details:";
 	public static final String SQL_EXCEPTION_MSG = "Error:Please Contact Support Team    Error Details:";
 	// Thammaiah added
