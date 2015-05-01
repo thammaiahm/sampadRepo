@@ -1,12 +1,12 @@
 package com.mot.upd.pcba.dao;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -18,13 +18,15 @@ import com.mot.upd.pcba.constants.ServiceMessageCodes;
 import com.mot.upd.pcba.pojo.DispatchSerialRequestPOJO;
 import com.mot.upd.pcba.pojo.DispatchSerialResponsePOJO;
 import com.mot.upd.pcba.utils.DBUtil;
+import com.mot.upd.pcba.utils.InitProperty;
 
 /**
  * @author HRDJ36 Thammaiah M B
  */
 
 public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
-
+	PropertyResourceBundle bundle = InitProperty
+			.getProperty("pcbasqlMySQL.properties");
 	private static Logger logger = Logger
 			.getLogger(DispatchSerialNumberMySQLDAO.class);
 	private DataSource ds;
@@ -56,7 +58,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_imei WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? LIMIT 1";
+			//String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_imei WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? LIMIT 1";
+			String selectSerialNumber  = bundle.getString("IMEI.selectSerial");
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 
@@ -89,7 +92,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
 
-		} finally {
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
+
+		}
+		finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
@@ -132,7 +143,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// update repo table
 
 			con.setAutoCommit(false);
-			String updateDispatchStatusIMEI = "UPDATE upd.upd_pcba_pgm_imei SET DISPATCH_DATE=NOW(),DISPATCH_STATUS=?,RSD_ID=?,MASC_ID=?,CLIENT_REQUEST_DATETIME=NOW(),LAST_MOD_BY=?,LAST_MOD_DATETIME=NOW() WHERE SERIAL_NO=?";
+			//String updateDispatchStatusIMEI = "UPDATE upd.upd_pcba_pgm_imei SET DISPATCH_DATE=NOW(),DISPATCH_STATUS=?,RSD_ID=?,MASC_ID=?,CLIENT_REQUEST_DATETIME=NOW(),LAST_MOD_BY=?,LAST_MOD_DATETIME=NOW() WHERE SERIAL_NO=?";
+			String updateDispatchStatusIMEI  = bundle.getString("IMEI.updateDispatchStatus");
 
 			preparedStmt = con.prepareStatement(updateDispatchStatusIMEI);
 			preparedStmt.setString(1, PCBADataDictionary.DISPATCHED);
@@ -145,7 +157,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 
 			// inerst SN Repos table
 			preparedStmt = null;
-			String inserSNReposIMEI = "INSERT INTO upd.upd_warranty_info (SERIAL_NO,CREATED_BY,CREATED_DATETIME,LAST_MOD_BY,LAST_MOD_DATETIME,status_code) VALUES (?,?,NOW(),?,NOW(),concat('VOI','     ',now()))";
+			//String inserSNReposIMEI = "INSERT INTO upd.upd_warranty_info (SERIAL_NO,CREATED_BY,CREATED_DATETIME,LAST_MOD_BY,LAST_MOD_DATETIME,status_code) VALUES (?,?,NOW(),?,NOW(),concat('VOI','     ',now()))";
+			String inserSNReposIMEI  = bundle.getString("IMEI.insertSNDeatail");
 			preparedStmt = con.prepareStatement(inserSNReposIMEI);
 			preparedStmt.setString(1,
 					dispatchSerialResponsePOJO.getNewSerialNo());
@@ -161,7 +174,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 					.getMascID());
 			dispatchSerialResponsePOJO.setRsdID(dispatchSerialRequestPOJO
 					.getRsdID());
-			String selectDispatchStatus = "SELECT DISPATCH_DATE FROM upd.upd_pcba_pgm_imei WHERE SERIAL_NO=? ";
+			//String selectDispatchStatus = "SELECT DISPATCH_DATE FROM upd.upd_pcba_pgm_imei WHERE SERIAL_NO=? ";
+			String selectDispatchStatus  = bundle.getString("IMEI.selectDispatchDate");
 			preparedStmt = con.prepareStatement(selectDispatchStatus);
 			preparedStmt.setString(1,
 					dispatchSerialResponsePOJO.getNewSerialNo());
@@ -230,6 +244,24 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 				ex.printStackTrace();
 			}
 
+		} 
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			dispatchSerialResponsePOJO.reset();
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+							+ e.getMessage());
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
 		} finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
@@ -266,7 +298,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_imei WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? LIMIT 1";
+			//String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_imei WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? LIMIT 1";
+			String selectSerialNumber  = bundle.getString("IMEI.validateSerial");
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 
@@ -298,7 +331,14 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
 
-		} finally {
+		} 
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
+
+		}finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
@@ -330,8 +370,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_meid WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? and Protocol_name=? limit 1";
-
+			//String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_meid WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? and Protocol_name=? limit 1";
+			String selectSerialNumber  = bundle.getString("MEID.selectSerial");
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 
 			preparedStmt.setString(1, dispatchSerialRequestPOJO.getGppdID());
@@ -365,7 +405,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
 
-		} finally {
+		}
+		catch (Exception e) {
+			System.out.println("error=" + e.getMessage());
+			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
+
+		}
+		finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
@@ -405,9 +453,10 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// update repo table
 
 			con.setAutoCommit(false);
-			String updateDispatchStatusIMEI = "UPDATE upd.upd_pcba_pgm_meid SET DISPATCH_DATE=NOW(),DISPATCH_STATUS=?,RSD_ID=?,MASC_ID=?,CLIENT_REQUEST_DATETIME=NOW(),LAST_MOD_BY=?,LAST_MOD_DATETIME=NOW() WHERE SERIAL_NO=?";
+			//String updateDispatchStatusIMEI = "UPDATE upd.upd_pcba_pgm_meid SET DISPATCH_DATE=NOW(),DISPATCH_STATUS=?,RSD_ID=?,MASC_ID=?,CLIENT_REQUEST_DATETIME=NOW(),LAST_MOD_BY=?,LAST_MOD_DATETIME=NOW() WHERE SERIAL_NO=?";
+			String updateDispatchStatusMEID  = bundle.getString("MEID.updateDispatchStatus");
 
-			preparedStmt = con.prepareStatement(updateDispatchStatusIMEI);
+			preparedStmt = con.prepareStatement(updateDispatchStatusMEID);
 			preparedStmt.setString(1, PCBADataDictionary.DISPATCHED);
 			preparedStmt.setString(2, dispatchSerialRequestPOJO.getRsdID());
 			preparedStmt.setString(3, dispatchSerialRequestPOJO.getMascID());
@@ -418,7 +467,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 
 			// inerst SN Repos table
 			preparedStmt = null;
-			String inserSNReposIMEI = "INSERT INTO upd.upd_warranty_info (SERIAL_NO,CREATED_BY,CREATED_DATETIME,LAST_MOD_BY,LAST_MOD_DATETIME,status_code) VALUES (?,?,NOW(),?,NOW(),concat('VOI','     ',now()))";
+			//String inserSNReposIMEI = "INSERT INTO upd.upd_warranty_info (SERIAL_NO,CREATED_BY,CREATED_DATETIME,LAST_MOD_BY,LAST_MOD_DATETIME,status_code) VALUES (?,?,NOW(),?,NOW(),concat('VOI','     ',now()))";
+			String inserSNReposIMEI  = bundle.getString("MEID.insertSNDeatail");
 			preparedStmt = con.prepareStatement(inserSNReposIMEI);
 			preparedStmt.setString(1,
 					dispatchSerialResponsePOJO.getNewSerialNo());
@@ -434,7 +484,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 					.getMascID());
 			dispatchSerialResponsePOJO.setRsdID(dispatchSerialRequestPOJO
 					.getRsdID());
-			String selectDispatchStatus = "SELECT DISPATCH_DATE FROM upd.upd_pcba_pgm_meid WHERE SERIAL_NO=? ";
+			//String selectDispatchStatus = "SELECT DISPATCH_DATE FROM upd.upd_pcba_pgm_meid WHERE SERIAL_NO=? ";
+			String selectDispatchStatus  = bundle.getString("MEID.selectDispatchDate");
 			preparedStmt = con.prepareStatement(selectDispatchStatus);
 			preparedStmt.setString(1,
 					dispatchSerialResponsePOJO.getNewSerialNo());
@@ -502,7 +553,26 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 				ex.printStackTrace();
 			}
 
-		} finally {
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			dispatchSerialResponsePOJO.reset();
+			dispatchSerialResponsePOJO
+					.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			dispatchSerialResponsePOJO
+					.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+							+ e.getMessage());
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		}
+		finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
@@ -538,7 +608,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_meid WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? and Protocol_name=? limit 1";
+			//String selectSerialNumber = "SELECT SERIAL_NO,BUILD_TYPE,CUSTOMER,GPPD_ID FROM upd.upd_pcba_pgm_meid WHERE GPPD_ID=? and CUSTOMER=? and Build_Type=? and Dispatch_Date is null and Dispatch_Status=? and Protocol_name=? limit 1";
+			String selectSerialNumber  = bundle.getString("MEID.validateSerial");
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 
@@ -571,7 +642,15 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
 					+ e.getMessage());
 
-		} finally {
+		} 
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setResponseCode(ServiceMessageCodes.SQL_EXCEPTION);
+			response.setResponseMsg(ServiceMessageCodes.SQL_EXCEPTION_MSG
+					+ e.getMessage());
+
+		}
+		finally {
 
 			DBUtil.closeConnections(con, preparedStmt, rs);
 
@@ -608,7 +687,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+			//String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+			String selectSerialNumber  = bundle.getString("WS.dispatchULMA");
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 			preparedStmt.setString(1, PCBADataDictionary.UNDISPATCHED);
@@ -679,7 +759,8 @@ public class DispatchSerialNumberMySQLDAO implements DispatchSerialNumberDAO {
 			// get database connection
 			con = DBUtil.getConnection(ds);
 
-			String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+			//String selectSerialNumber = "SELECT ulma FROM upd.upd_ulma_repos WHERE  is_dispatched=? and dispatched_datetime is null limit ?";
+			String selectSerialNumber  = bundle.getString("WS.dispatchULMA");
 
 			preparedStmt = con.prepareStatement(selectSerialNumber);
 			preparedStmt.setString(1, PCBADataDictionary.UNDISPATCHED);
