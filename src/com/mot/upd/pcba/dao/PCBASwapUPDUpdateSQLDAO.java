@@ -116,7 +116,7 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setString(34, rs.getString("guid"));
 				pstmt1.setString(35, "pdb_id");
 				boolean status1=pstmt1.execute();
-				
+
 				pstmt1=null;
 
 				String MySql_updRepair="insert into upd.upd_repair (serial_no,cancel_code,swap_ref_no,swap_count,delete_flag,org_code,upd_time,dn,era,rma,receive_date,"+
@@ -150,7 +150,7 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setString(24, rs.getString("repair_count"));
 				pstmt1.setDate(25, rs.getDate("swap_date"));
 				boolean status2 = pstmt1.execute();
-				
+
 				pstmt1=null;
 
 				String MySql_updWarrantyInfo="insert into upd.upd_warranty_info (serial_no,status_code,orig_warr_eff_date,ren_warr_code,warr_country_code,warr_region,orig_ship_date,reference_key,"+
@@ -174,9 +174,9 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setDate(10, rs.getDate("pop_date"));
 				pstmt1.setString(11, rs.getString("pop_identifier"));
 				boolean status3 = pstmt1.execute();
-				
+
 				pstmt1 =null;
-				
+
 				String MySql_updDeviceConfig="insert into upd.upd_device_config (serial_no,handset_type,flex_option,flex_sw,hw,icc_id,software_version,wimax,hsn,flash_uid,dual_serial_no,"+
 						"dual_serial_no_type,fastt_id,base_processor_id,wlan,created_datetime,created_by) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),'pcba_pgm_success')";
 
@@ -198,9 +198,9 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setString(14, rs.getString("base_processor_id"));
 				pstmt1.setString(15, rs.getString("wlan"));
 				boolean status4 = pstmt1.execute();
-				
+
 				pstmt1=null;
-				
+
 				String MySql_updDirectShipment="insert into upd.upd_direct_shipment (serial_no,so_line_no,ds_region_code,ds_so_no,ds_po_no,ds_cust_id,ds_bill_to_id,ds_ship_to_id,ds_cust_country_code,"+
 						"ds_cust_name,bill_to_id,shipment_no,phone_no,wip_dj,sale_date,last_imei,created_datetime,created_by) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),'pcba_pgm_success')";
 				//con5 = DBUtil.getConnection(ds);
@@ -222,7 +222,7 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setDate(15, rs.getDate("sale_date"));
 				pstmt1.setString(16, rs.getString("last_imei"));
 				boolean status5 = pstmt1.execute();
-				
+
 				pstmt1=null;
 
 				String MySql_updLockCode="insert into upd.upd_lock_code (serial_no,meid_evdo_password,meid_a_key2_type,meid_a_key2,imc_lock_code,created_datetime,created_by) values(?,?,?,?,?,now(),'pcba_pgm_success')";
@@ -234,9 +234,9 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setString(4, rs.getString("meid_a_key2"));
 				pstmt1.setString(5, rs.getString("imc_lock_code"));
 				boolean status6 = pstmt1.execute();
-				
+
 				pstmt1=null;
-				
+
 				String Sql_updMeid =" insert into upd.upd_meid (serial_no,a_key_index,cas_no,created_datetime,created_by) values(?,?,?,now(),'pcba_pgm_success')";
 				//conn = DBUtil.getConnection(ds);
 				pstmt1=con1.prepareStatement(Sql_updMeid);
@@ -244,9 +244,9 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 				pstmt1.setString(2,rs.getString("a_key_index"));
 				pstmt1.setString(3,rs.getString("cas_no"));
 				boolean status7 = pstmt1.execute();
-				
+
 				pstmt1=null;
-				
+
 
 				if(!status1 && !status2 && !status3 && !status4 && !status5 && !status6 && !status7){
 					String statusCode ="SCR  "+DateToStr;
@@ -255,9 +255,9 @@ public class PCBASwapUPDUpdateSQLDAO implements PCBASwapUPDUpdateInterfaceDAO{
 					pstmt1=con1.prepareStatement(statusUpdatingOldSerialNo);
 					pstmt1.execute();
 				}
-				
+
 				con1.commit();
-				
+
 				response.setResponseCode(ServiceMessageCodes.SUCCESS);
 				response.setResponseMessage(ServiceMessageCodes.OPERATION_SUCCESS);
 

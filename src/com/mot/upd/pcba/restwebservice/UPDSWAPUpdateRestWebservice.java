@@ -29,7 +29,7 @@ public class UPDSWAPUpdateRestWebservice {
 	@Consumes("application/json")
 	public Response swapSerialNOData(PCBASerialNoUPdateQueryInput pCBASerialNoUPdateQueryInput){
 
-		
+
 		PCBASerialNoUPdateResponse pcbaSerialNoUPdateResponse = new PCBASerialNoUPdateResponse();
 
 		boolean isMissing=false;
@@ -74,7 +74,7 @@ public class UPDSWAPUpdateRestWebservice {
 			return Response.status(200).entity(pcbaSerialNoUPdateResponse).build();
 
 		}
-		
+
 
 		PCBASerialNoUPdateResponse response = pcbaSwapUPDUpdateInterfaceDAO.serialNumberInfo(pCBASerialNoUPdateQueryInput);
 

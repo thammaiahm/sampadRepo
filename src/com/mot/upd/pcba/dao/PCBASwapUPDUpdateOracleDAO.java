@@ -39,12 +39,12 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 	private PreparedStatement pstmt1 = null;
 	private PreparedStatement prestmt = null;
 	private ResultSet rs=null;
-	
+
 
 	PCBASerialNoUPdateResponse response = new PCBASerialNoUPdateResponse();
-	
+
 	StringBuffer SQLQuery=new StringBuffer();
-	
+
 	public PCBASerialNoUPdateResponse serialNumberInfo(PCBASerialNoUPdateQueryInput pCBASerialNoUPdateQueryInput){
 		try {
 
@@ -55,13 +55,13 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 			response.setResponseMessage(ServiceMessageCodes.NO_DATASOURCE_FOUND_FOR_SERIAL_NO_MSG);
 			return response;
 		}
-		
+
 		try {
 			// get database connection
 			con = DBUtil.getConnection(ds);
-			
+
 			StringBuffer sb=new StringBuffer();
-			
+
 			sb.append("select  SERIAL_NO, REQUEST_ID, REGION_ID, SYSTEM_ID, ATTRIBUTE_01, ATTRIBUTE_02, ATTRIBUTE_03, ATTRIBUTE_04, ATTRIBUTE_05,ATTRIBUTE_06,  ATTRIBUTE_07,  ATTRIBUTE_08,");  
 			sb.append("ATTRIBUTE_09, ATTRIBUTE_10,   ATTRIBUTE_11,  ATTRIBUTE_12,  ATTRIBUTE_13,  ATTRIBUTE_14, ATTRIBUTE_15,  ATTRIBUTE_16,  ATTRIBUTE_17,  ATTRIBUTE_18,  ATTRIBUTE_19,");
 			sb.append("ATTRIBUTE_20,  ATTRIBUTE_21,  ATTRIBUTE_22,  ATTRIBUTE_23,  ATTRIBUTE_24,  ATTRIBUTE_34, ATTRIBUTE_35,  ATTRIBUTE_37,  ATTRIBUTE_38,  ATTRIBUTE_39,  ATTRIBUTE_40,");
@@ -73,18 +73,18 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 			sb.append("ATTRIBUTE_97,  ATTRIBUTE_98,  ATTRIBUTE_99,  ATTRIBUTE_100, ATTRIBUTE_101, ATTRIBUTE_105,ATTRIBUTE_106, ATTRIBUTE_107, ATTRIBUTE_108, ATTRIBUTE_109, ATTRIBUTE_110,");
 			sb.append("ATTRIBUTE_111, ATTRIBUTE_112, ATTRIBUTE_113, ATTRIBUTE_117, ATTRIBUTE_118, ATTRIBUTE_114,ATTRIBUTE_115, ATTRIBUTE_116, ATTRIBUTE_119, ATTRIBUTE_120, ATTRIBUTE_121,");
 			sb.append("ATTRIBUTE_122, ATTRIBUTE_123 from UPD_SN_REPOS  where serial_no=?");
-			
+
 			preparedStmt = con.prepareStatement(sb.toString());
 			preparedStmt.setString(1,pCBASerialNoUPdateQueryInput.getSerialNoIn());
 			rs=preparedStmt.executeQuery();
-			
-			
+
+
 			if(rs.next()){
-				
+
 				connection = DBUtil.getConnection(ds);
-				
-				
-								
+
+
+
 				SQLQuery.append("insert into UPD_SN_REPOS(SERIAL_NO, REQUEST_ID, REGION_ID, SYSTEM_ID, ATTRIBUTE_01, ATTRIBUTE_02, ATTRIBUTE_03, ATTRIBUTE_04, ATTRIBUTE_05,ATTRIBUTE_06,  ATTRIBUTE_07,  ATTRIBUTE_08,");  
 				SQLQuery.append("ATTRIBUTE_09, ATTRIBUTE_10,   ATTRIBUTE_11,  ATTRIBUTE_12,  ATTRIBUTE_13,  ATTRIBUTE_14, ATTRIBUTE_15,  ATTRIBUTE_16,  ATTRIBUTE_17,  ATTRIBUTE_18,  ATTRIBUTE_19,");
 				SQLQuery.append("ATTRIBUTE_20,  ATTRIBUTE_21,  ATTRIBUTE_22,  ATTRIBUTE_23,  ATTRIBUTE_24,  ATTRIBUTE_34, ATTRIBUTE_35,  ATTRIBUTE_37,  ATTRIBUTE_38,  ATTRIBUTE_39,  ATTRIBUTE_40,");
@@ -96,7 +96,7 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 				SQLQuery.append("ATTRIBUTE_97,  ATTRIBUTE_98,  ATTRIBUTE_99,  ATTRIBUTE_100, ATTRIBUTE_101, ATTRIBUTE_105,ATTRIBUTE_106, ATTRIBUTE_107, ATTRIBUTE_108, ATTRIBUTE_109, ATTRIBUTE_110,");
 				SQLQuery.append("ATTRIBUTE_111, ATTRIBUTE_112, ATTRIBUTE_113, ATTRIBUTE_117, ATTRIBUTE_118, ATTRIBUTE_114,ATTRIBUTE_115, ATTRIBUTE_116, ATTRIBUTE_119, ATTRIBUTE_120, ATTRIBUTE_121,");
 				SQLQuery.append("ATTRIBUTE_122, ATTRIBUTE_123) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-				
+
 				pstmt = connection.prepareStatement(SQLQuery.toString());
 				pstmt.setString(1, pCBASerialNoUPdateQueryInput.getSerialNoOut());				
 				pstmt.setString(2,rs.getString("REQUEST_ID"));
@@ -128,11 +128,11 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 				pstmt.setString(28,rs.getString("ATTRIBUTE_24"));
 				pstmt.setString(29,rs.getString("ATTRIBUTE_34"));
 				pstmt.setString(30,rs.getString("ATTRIBUTE_35")); 
-				
+
 				Date curDate = new Date();				
-		        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyy");		
-		        String DateToStr = format.format(curDate);
-		        
+				SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyy");		
+				String DateToStr = format.format(curDate);
+
 				pstmt.setString(31,"ACT  "+DateToStr);//Status
 				pstmt.setString(32,rs.getString("ATTRIBUTE_38")); 
 				pstmt.setString(33,rs.getString("ATTRIBUTE_39")); 
@@ -217,20 +217,20 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 				pstmt.setString(112,rs.getString("ATTRIBUTE_122"));
 				pstmt.setString(113,rs.getString("ATTRIBUTE_123"));
 				//pstmt.setString(114, pCBASerialNoUPdateQueryInput.getSerialNoOut());	
-				
+
 				boolean status=pstmt.execute();
-											
+
 				if(!status){
 					con1 = DBUtil.getConnection(ds);
 					String updateOldserialNOStatus = "update UPD_SN_REPOS set ATTRIBUTE_37='SCR  "+DateToStr+"' where serial_no='"+pCBASerialNoUPdateQueryInput.getSerialNoIn()+"'";
 					pstmt1 = con1.prepareStatement(updateOldserialNOStatus);
 					pstmt1.execute();
-				
+
 				}
-				
+
 				response.setResponseCode(ServiceMessageCodes.SUCCESS);
 				response.setResponseMessage(ServiceMessageCodes.READING_OLD_SERIAL_NO_INTO_NEW_SERIAL_NO);
-				
+
 			}else{
 				conn = DBUtil.getConnection(ds);				
 				StringBuffer stb=new StringBuffer();
@@ -246,9 +246,9 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 				prestmt.execute();
 				response.setResponseCode(ServiceMessageCodes.OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE);
 				response.setResponseMessage(ServiceMessageCodes.OLD_SERIAL_NO_NOT_FOUND_IN_SHIPMENT_TABLE_MSG);
-				
+
 			}
-			
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -258,8 +258,8 @@ public class PCBASwapUPDUpdateOracleDAO implements PCBASwapUPDUpdateInterfaceDAO
 			DBUtil.connectionClosed(conn, prestmt);
 			DBUtil.connectionClosed(con1, pstmt1);
 		}
-		
-		
+
+
 		return response;
 	}
 
