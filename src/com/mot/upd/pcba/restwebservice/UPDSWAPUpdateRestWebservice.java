@@ -18,11 +18,12 @@ import com.mot.upd.pcba.utils.DBUtil;
 
 
 /**
- * @author Quinnox Dev Team
+ * @author rviswa
  *
  */
 @Path("/swapSerialNOData")
 public class UPDSWAPUpdateRestWebservice {
+	
 
 	@POST
 	@Produces("application/json")
